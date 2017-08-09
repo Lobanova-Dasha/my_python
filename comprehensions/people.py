@@ -1,5 +1,5 @@
 # people.py
-# Thanks so much Corey Schafer for the great explanation
+# Thanks so much to Corey Schafer for the great explanation
 # https://www.youtube.com/channel/UCCezIgC97PvUuR4_gbFUs5g
 
 import mem_profile
