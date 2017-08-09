@@ -1,5 +1,5 @@
-#sorting.py
-# Thanks so much Corey Schafer for the great explain
+# sorting.py
+# Thanks so much Corey Schafer for the great explanation
 # https://www.youtube.com/channel/UCCezIgC97PvUuR4_gbFUs5g
 
 # Sorting Lists
