@@ -9,7 +9,7 @@ person = {'name': 'Dasha', 'age': 22}
 sentence = 'My name is ' + person['name'] + ' and I am ' + str(person['age']) + ' years old.'
 # print(sentence)
 
-sentence = 'My name is {} and I am {}'.format(person['name'], str(person['age']))
+sentence = 'My name is {} and I am {}'.format(person['name']), str(person['age'])
 # print(sentence)
 
 sentence = 'My name is {0[name]} and I am {1[age]}'.format(person, person)
