@@ -41,21 +41,61 @@ class Employee:
     def is_workday(day):
         if day.weekday() == 5 or day.weekday() == 6:
             return False
-        return True           
+        return True    
 
 
-emp_1 = Employee('Dude', 'Lebowski', 50000)
-emp_2 = Employee('Test', 'User', 60000)
+class Developer(Employee):
+    raise_amt = 1.10
 
-import datetime
-my_date = datetime.date(2017, 2, 8)
+    def __init__(self, first, last, pay, prog_lang):
+        super().__init__(first, last, pay)
+        #Employee.__init__(self, first, last, pay)
+        self.prog_lang = prog_lang
 
-print(Employee.is_workday(my_date))
+
+class Manager(Employee):
+
+    def __init__(self, first, last, pay, employees=None):
+        super().__init__(first, last, pay)
+        if employees is None:
+            self.employees = []
+        else:
+            self.employees = employees    
+        
+        def add_emp(self, emp):
+            if emp not in self.employees:
+                self.employees.append(emp)
+
+        def remove_emp(self, emp):
+            if emp in self.employees:
+                self.employees.remove(emp)
+
+
+        def print_emps(self):
+            for emp in self.employees:
+                print('-->', emp.fullname())   
+
+        
+
+
+dev_1 = Developer('Dude', 'Lebowski', 50000, "Python")
+dev_2 = Developer('Test', 'User', 60000, "Java")
+
+
+mgr_1 = Manager('Sue', 'Smith', 90000, [dev_1])
+
+
+# emp_1 = Employee('Dude', 'Lebowski', 50000)
+# emp_2 = Employee('Test', 'User', 60000)
+
+# import datetime
+# my_date = datetime.date(2017, 2, 8)
+
+# print(Employee.is_workday(my_date))
 # emp_str_1 = 'Jhon-Doe-70000'
 # emp_str_2 = 'Steve_Smith-30000'
 # emp_str_3 = 'Jane-Doe-90000'
 
-# first, last, pay = emp_str_1.split('-')
 
 # new_emp_1 = Employee.from_string(emp_str_1)
 # print(new_emp_1.email)
@@ -64,7 +104,7 @@ print(Employee.is_workday(my_date))
 #print(Employee.__dict__)
 # print(Employee.num_of_emps)
 
-# # emp_1.raise_amount = 1.05
+# emp_1.raise_amount = 1.05
 # Employee.set_raise_amt(1.05)
 
 # print(Employee.raise_amt)
