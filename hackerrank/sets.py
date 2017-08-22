@@ -26,3 +26,9 @@ sim_differ = sorted(list(m.difference(n)) + list(n.difference(m)))
 
 for x in sim_differ:
     print(x)
+
+
+# Set .add() 
+a_set = {input() for el in range(int(input()))}
+print(len(a_set))
+    
