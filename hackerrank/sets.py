@@ -79,6 +79,7 @@ french = {int(i) for i in input().split()}
 
 print(len(eng.difference(french)))
 
+
 # Set .symmetric_difference() Operation
 n = input()
 eng = {int(i) for i in input().split()}
@@ -87,6 +88,28 @@ n1 = input()
 french = {int(i) for i in input().split()}
 
 print(len(eng.symmetric_difference(french)))
+
+
+# Set Mutations
+n = int(input())
+origin = set(map(int,input().split()))
+num_of_commands = int(input())
+
+for i in range(num_of_commands):
+    choice = input().split()
+    other = set(map(int,input().split()))
+    
+    if choice[0]=="intersection_update" :
+        origin.intersection_update(other)
+    elif choice[0]=="update" :
+        origin.update(other)
+    elif choice[0]=="symmetric_difference_update" :
+        origin.symmetric_difference_update(other)
+    elif choice[0]=="difference_update" :
+        origin.difference_update(other) 
+             
+            
+print(sum(origin))  
 
 
 # Check Subset

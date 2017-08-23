@@ -113,13 +113,29 @@ line = input()
 num = int(input())
 num_subsegments = int(len(line) / num)
 
-for index in range(num_subsegments):
-    # Subsegment string by by ordered unique values
-    result = sorted(list(set(list(line[index*num:(index+1)*num]))))
+# for index in range(num_subsegments):
+    
+#     # Subsegment string by by ordered unique values
+#     result = sorted(list(set(list(line[index*num:(index+1)*num]))))
    
-    #Print final converted string
-    print("".join(result))
+#     #Print final converted string
+#     print("".join(result))
 
+
+for index in range(num_subsegments):
+    # Subsegment string
+    t = line[index*num : (index + 1)*num]
+    
+    # Subsequence string having distinct characters
+    u = ""
+    
+    # If a character is not already in 'u', append
+    for c in t:
+        if c not in u:
+            u += c
+
+    # Print final converted string
+    print(u)
 
 
 
