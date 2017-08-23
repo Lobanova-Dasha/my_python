@@ -33,6 +33,23 @@ a_set = {input() for el in range(int(input()))}
 print(len(a_set))
 
 
+# Set .discard(), .remove() & .pop()
+n = int(input())
+s = set(map(int,input().split()))
+num_of_commands = int(input())
+
+for i in range(num_of_commands):
+    choice = input().split()
+    if choice[0]=="pop" :
+        s.pop()
+    elif choice[0]=="remove" :
+        s.remove(int(choice[1]))
+    elif choice[0]=="discard" :
+        s.discard(int(choice[1])) 
+
+print(sum(s))  
+
+
 # Set .union() Operation
 n = input()
 eng = {int(i) for i in input().split()}
@@ -98,3 +115,22 @@ B = set(input().split())
 # print(len(A.intersection(arr)) - len(B.intersection(arr)]))
 # At the same time, this solution works. Why?
 print(sum([(i in A) - (i in B) for i in arr]))
+
+
+# The Captain's Room
+n = input()
+line = input().split()
+count = {}
+
+for num in line:
+    count.setdefault(num, 0)
+    count[num] = count[num] + 1
+
+for k, v in count.items():
+    if v == 1:
+        print(k)  
+
+
+# k,arr = int(input()),list(map(int, input().split()))
+# myset = set(arr)
+# print(((sum(myset)*k)-(sum(arr)))//(k-1))        
