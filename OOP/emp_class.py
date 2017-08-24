@@ -22,7 +22,7 @@ class Employee:
 
 
     def apply_raise(self):
-        self.pay = int(self.pay* self.raise_amount)      
+        self.pay = int(self.pay*self.raise_amount)      
 
 
 

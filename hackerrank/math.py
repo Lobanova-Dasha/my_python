@@ -28,3 +28,35 @@ print(pow(a,b,c))
 # Triangle Quest
 for i in range(1,int(input())): 
     print(str(i)*i) 
+    #print((10**(i)//9)*i)        
+
+
+# Find Angle MBC
+import math
+AB = float(input())
+BC = float(input())
+
+print(str(int(round(math.degrees(math.atan2(AB, BC)))))+'°')  
+
+
+# Triangle Quest 2
+for x in range(1,int(input())+1):
+    print(((10**x - 1)//9)**2)
+     
+
+# 10**x  10**x - 1 (10**x - 1)//9) (10**x - 1)//9)**2
+# 10       9       1                1
+# 100      99      11               121
+# 1000     999     111              12321
+# 10000    9999    1111             1234321
+# 100000   99999   11111            123454321  
+
+
+# Polar Coordinates
+from cmath import polar
+
+polar = polar(complex(input()))
+
+print(polar[0])
+print(polar[1])
+
