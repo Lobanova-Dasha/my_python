@@ -25,7 +25,27 @@ print(eval(input()) == k)
 eval(input())
 
 
+# Sort Data
+n, m = map(int, input().split()) # actually, 'm' is useless argument
+rows = [input() for i in range(n)]
+indx = int(input()) # The table must be sorted by the row's index 
+
+for row in sorted(rows, key=lambda row: int(row.split()[indx])):
+    print(row)
+
+
+# Any or All
+useless_arg = int(input())
+num_lst = input().split()
+
+print(all([int(num)>=0 for num in num_lst]) 
+	  and 
+	  any([num == num[::-1] for num in num_lst]))
+
+
 # ginortS
+from functools import reduce
+
 line = input()
 
 alpha = list(filter((lambda x: x.isalpha()), line))
@@ -49,8 +69,9 @@ new_digit = list(map(str, odd + even))
 
 my_seq = lower + upper + new_digit
 
-from functools import reduce 
 
 print(reduce((lambda x, y: x + y), my_seq))
+
+
 
 
