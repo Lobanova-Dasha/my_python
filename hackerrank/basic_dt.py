@@ -84,7 +84,7 @@ print(sorted(list(set(a_list)))[-2])
 # Given the names and grades for each student 
 # in a Physics class of  students, 
 # store them in a nested list and print the name(s) 
-#of any student(s) having the second lowest grade.
+# of any student(s) having the second lowest grade.
 
 students = [[input(), float(input())] for person in range(int(input()))]
 
@@ -95,6 +95,20 @@ mark = sorted(list(set(val)))[1]
 for k, v in a_dict.items():
 	if v == mark:
 		print(k)
+
+### New solution ###
+
+# [['Harry', 37.21], ['Berry', 37.21], ['Tina', 37.2],....
+students = [[input(), float(input())] for person in range(int(input()))]
+
+# Extract marks from students and sort them
+# [37.2, 37.21, 39.0, 41.0]
+marks = sorted(set([x[1] for x in students]))
+
+# Print each name of students on a new line in alphabetical order
+# who has the second lowest grade
+for name in sorted(x[0] for x in students if x[1] == marks[1]):
+    print(name)   
 
 
 # Finding the percentage #	

@@ -42,4 +42,15 @@ def fun(s):
 
 
 # Reduce Function
+from fractions import Fraction
+from functools import reduce
 
+n = int(input())
+li = []
+
+for i in range(n):
+    x, y = list(map(int,input().split())) 
+    li.append(Fraction(x,y))
+
+fract = reduce((lambda x, y: x * y), li)
+print(fract.numerator, fract.denominator)  
