@@ -156,7 +156,7 @@ for i in range(int(input())):
     print(''.join(even) + ' ' + ''.join(odd))
 
 
-# I think, it's such genius solution, 
+# I think, it's a such genius solution, 
 # unfortunately not mine. But I'll memorise this trick
 for i in range(int(input())):
     word = input()
