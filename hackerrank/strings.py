@@ -137,7 +137,56 @@ for index in range(num_subsegments):
     # Print final converted string
     print(u)
 
+# Alex, you said we have to discuss the basic DT a bit. 
+# So, please, check this extra challenge
+
+# Day 6: Let's Review
+# Task. Given a string,S, of length N that is indexed from 0 to N-1, 
+# print its even-indexed and odd-indexed characters as  space-separated 
+# strings on a single line 
+# Sample Input    Sample Output
+# 2
+# Hacker          Hce akr
+# Rank            Rn ak
+
+for i in range(int(input())):
+    word = input()
+    even = [word[let] for let in range(len(word)) if let%2 == 0]
+    odd = [word[let] for let in range(len(word)) if let%2 == 1]
+    print(''.join(even) + ' ' + ''.join(odd))
 
 
+# I think, it's such genius solution, 
+# unfortunately not mine. But I'll memorise this trick
+for i in range(int(input())):
+    word = input()
+    print(word[::2], word[1::2])    
 
+# My first and awful attempt
+# n = int(input())
+# even = []
+# odd = []
 
+# for i in range(n):
+#     word = input()
+#     for let in range(len(word)):
+#         if let%2 == 0:
+#             even.append(word[let])
+#         else:
+#             odd.append(word[let])    
+#     print(''.join(even) + ' ' + ''.join(odd))
+#     even, odd = [], []
+
+# Python2
+# t = int(raw_input())
+# for _ in range(t):
+#     line = raw_input()
+#     first = ""
+#     second = ""
+
+#     for i, c in enumerate(line):
+#         if (i & 1) == 0:
+#             first += c
+#         else:
+#             second += c
+#     print first, second

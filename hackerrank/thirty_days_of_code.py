@@ -56,3 +56,87 @@ for i in range(0, t):
 n = int(input())
 for i in range(1,11):
     print('{} x {} = {}'.format(n, i, i*n))           
+
+
+# Day 6: Let's Review
+# Task. Given a string,S, of length N that is indexed from 0 to N-1, 
+# print its even-indexed and odd-indexed characters as  space-separated 
+# strings on a single line 
+# Sample Input    Sample Output
+# 2
+# Hacker          Hce akr
+# Rank            Rn ak
+
+for i in range(int(input())):
+    word = input()
+    even = [word[let] for let in range(len(word)) if let%2 == 0]
+    odd = [word[let] for let in range(len(word)) if let%2 == 1]
+    print(''.join(even) + ' ' + ''.join(odd))
+
+
+# I think, it's such genius solution, 
+# unfortunately not mine. But I'll memorise this trick
+for i in range(int(input())):
+    word = input()
+    print(word[::2], word[1::2])    
+
+# My first and awful attempt
+# n = int(input())
+# even = []
+# odd = []
+
+# for i in range(n):
+#     word = input()
+#     for let in range(len(word)):
+#         if let%2 == 0:
+#             even.append(word[let])
+#         else:
+#             odd.append(word[let])    
+#     print(''.join(even) + ' ' + ''.join(odd))
+#     even, odd = [], []
+
+# Python2
+# t = int(raw_input())
+# for _ in range(t):
+#     line = raw_input()
+#     first = ""
+#     second = ""
+
+#     for i, c in enumerate(line):
+#         if (i & 1) == 0:
+#             first += c
+#         else:
+#             second += c
+#     print first, second
+
+
+# Day 7: Arrays 
+# Task. Given an array,A, of N integers, print A's elements 
+# in reverse order as a single line of space-separated numbers.
+usless_arg = input()
+print(' '.join(input().split()[::-1]))
+
+
+# Day 8: Dictionaries and Maps
+# Task. Given  names and phone numbers, assemble a phone book 
+# that maps friends' names to their respective phone numbers. 
+# You will then be given an unknown number of names to query your 
+# phone book for. For each name queried, print the associated entry 
+# from your phone book on a new line in the form name=phoneNumber; 
+#if an entry for name is not found, print "Not found" instead.
+
+n = int(input())
+book = dict(input().split() for person in range(n))
+
+# book = {'sam': '99912222',
+#         'tom': '11122222',
+#         'harry': '12299933'}
+
+for i in range(n):
+    name = input()
+    number = book.get(name)
+
+    if name in book:
+        print(name+'='+number)
+    else:
+        print('Not found')        
