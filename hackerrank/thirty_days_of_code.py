@@ -1,4 +1,4 @@
-classes.py
+# thirty_days_of_code.py
 
 # Day 4: Class vs. Instance 
 # Task. Write a Person class with an instance variable, age, 
@@ -45,4 +45,14 @@ for i in range(0, t):
     for j in range(0, 3):
         p.yearPasses()       
     p.amIOld()
-    print("")         
+    print("")  
+
+
+# Day 5: Loops
+# Task.Given an integer,n, print its first 10 multiples. 
+# Each multiple should be printed on a new line 
+# in the form: n x i = result.
+
+n = int(input())
+for i in range(1,11):
+    print('{} x {} = {}'.format(n, i, i*n))           
