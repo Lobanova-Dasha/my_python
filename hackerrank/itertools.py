@@ -105,3 +105,13 @@ _, data, k = input(), input(), int(input())
 comb = list(combinations(data, k))
 a_list = [i for i in comb if 'a' in i]
 print(len(a_list)/len(comb))
+
+
+# Maximize It!
+from itertools import product
+
+n, denominator = map(int,input().split())
+arr = (list(map(int, input().split()))[1:] for _ in range(n))
+
+results = map(lambda x: sum(i**2 for i in x)%denominator, product(*arr))
+print(max(results))

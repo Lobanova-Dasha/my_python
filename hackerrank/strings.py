@@ -137,8 +137,6 @@ for index in range(num_subsegments):
     # Print final converted string
     print(u)
 
-# Alex, you said we have to discuss the basic DT a bit. 
-# So, please, check this extra challenge
 
 # Day 6: Let's Review
 # Task. Given a string,S, of length N that is indexed from 0 to N-1, 
