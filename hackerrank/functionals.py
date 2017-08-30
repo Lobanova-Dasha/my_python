@@ -52,5 +52,5 @@ for i in range(n):
     x, y = list(map(int,input().split())) 
     li.append(Fraction(x,y))
 
-fract = reduce((lambda x, y: x * y), li)
+fract = reduce(lambda x, y: x * y, li)
 print(fract.numerator, fract.denominator)  

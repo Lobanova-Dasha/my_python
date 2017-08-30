@@ -53,7 +53,7 @@ def addToInventory(inventory, addedItems) :
 	count = {}
 	for i in addedItems:
 		count.setdefault(i, 0)
-		count[i] = count [i] + 1
+		count[i] = count[i] + 1
 		new_count = count
 
 	c1 = Counter(new_count)

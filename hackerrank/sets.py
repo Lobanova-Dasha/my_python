@@ -114,8 +114,8 @@ print(sum(origin))
 
 # Check Subset
 for i in range(int(input())):
-    a = int(input()); A = set(input().split()) 
-    b = int(input()); B = set(input().split())
+    a, A = int(input()), set(input().split()) 
+    b, B = int(input()), set(input().split())
     print(A.issubset(B))
 
 
