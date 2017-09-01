@@ -139,4 +139,12 @@ for i in range(n):
     if name in book:
         print(name+'='+number)
     else:
-        print('Not found')        
+        print('Not found') 
+
+
+# Day 9: Recursion
+# Task. Write a factorial function that takes N a positive integer,  
+# as a parameter and prints the result of N! (N factorial).
+factorial = lambda x : 1 if x<=1 else x*factorial(x-1)
+
+print(factorial(int(input())))               
