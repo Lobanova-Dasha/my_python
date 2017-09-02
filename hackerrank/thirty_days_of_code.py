@@ -150,16 +150,20 @@ factorial = lambda x : 1 if x<=1 else x*factorial(x-1)
 print(factorial(int(input())))               
 
 # Day 10: Binary numbers
-line = bin(int(input()))
-print(line)
 
-num = 0
+print(len(max(bin(int(input().strip()))[2:].split('0'))))
+# line = bin(int(input()))
+# print(line)
 
-if "0" in line:
-    num += 1
-elif "1" in line:
-    num +=1
-else:
-    pass 
+# num = 0
 
-print(num)          
+# if "0" and '1' in line:
+#     num += 2
+# elif "1" in line:
+#     num +=1
+# elif "0" in line:
+#     num +=1    
+# else:
+#     pass 
+
+# print(num)          
