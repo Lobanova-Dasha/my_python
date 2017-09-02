@@ -148,3 +148,18 @@ for i in range(n):
 factorial = lambda x : 1 if x<=1 else x*factorial(x-1)
 
 print(factorial(int(input())))               
+
+# Day 10: Binary numbers
+line = bin(int(input()))
+print(line)
+
+num = 0
+
+if "0" in line:
+    num += 1
+elif "1" in line:
+    num +=1
+else:
+    pass 
+
+print(num)          
