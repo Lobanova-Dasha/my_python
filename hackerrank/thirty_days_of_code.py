@@ -166,4 +166,25 @@ print(len(max(bin(int(input().strip()))[2:].split('0'))))
 # else:
 #     pass 
 
-# print(num)          
+# print(num) 
+
+
+#Day 16: Exceptions - String to Integer
+try:
+    print(int(input()))
+
+except ValueError as e:
+    print('Bad String')
+    
+
+# Day 17: More Exceptions 
+for i in range(int(input())):
+    
+    try:
+        n,p = map(int, input().split())
+        assert n>= 0 and p>=0, "n and p should be non-negative"
+        print(n**p)
+    
+    except Exception as e:
+        print(e)
+
