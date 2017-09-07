@@ -31,4 +31,8 @@ for _ in range(int(input())):
         print(bool(re.compile(input())))
     
     except:
-        print('False')        	
+        print('False')  
+
+
+
+              	
