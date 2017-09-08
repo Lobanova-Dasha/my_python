@@ -169,6 +169,10 @@ print(len(max(bin(int(input().strip()))[2:].split('0'))))
 # print(num) 
 
 
+#Day 15: Linked List
+print(*[input() for x in range(int(input()))])
+  
+
 #Day 16: Exceptions - String to Integer
 try:
     print(int(input()))
