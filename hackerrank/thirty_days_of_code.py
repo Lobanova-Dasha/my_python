@@ -168,6 +168,9 @@ print(len(max(bin(int(input().strip()))[2:].split('0'))))
 
 # print(num) 
 
+#
+def computeDifference(self):
+        self.maximumDifference = max(a) - min(a)
 
 #Day 15: Linked List
 print(*[input() for x in range(int(input()))])
