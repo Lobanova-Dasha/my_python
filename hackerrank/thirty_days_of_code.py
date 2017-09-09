@@ -168,7 +168,7 @@ print(len(max(bin(int(input().strip()))[2:].split('0'))))
 
 # print(num) 
 
-#
+#Day 14: Scope 
 def computeDifference(self):
         self.maximumDifference = max(a) - min(a)
 
