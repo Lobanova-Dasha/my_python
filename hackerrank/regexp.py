@@ -194,4 +194,14 @@ for _ in range(int(input())):
     if re.match(valid, s) and not re.search(invalid, s.replace("-", "")):
         print("Valid")
     else:
-        print("Invalid")    
+        print("Invalid") 
+
+
+#16 Validating Postal Codes
+print(bool(re.match(
+    r'^'
+    r'(?!.*(.).\1.*(.).\2)'
+    r'(?!.*(.)(.)\3\4)'
+    r'[1-9]\d{5}'
+    r'$', input()
+)))           
