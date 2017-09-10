@@ -182,3 +182,16 @@ for _ in range(int(input())):
         print('Invalid')
     else:
         print('Valid')
+
+
+#15 Validating Credit Card Numbers
+valid = r"^[456]([\d]{15}|[\d]{3}(-[\d]{4}){3})$"
+invalid = r"([\d])\1\1\1"
+
+for _ in range(int(input())):
+    s = input()
+
+    if re.match(valid, s) and not re.search(invalid, s.replace("-", "")):
+        print("Valid")
+    else:
+        print("Invalid")    
