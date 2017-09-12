@@ -195,3 +195,10 @@ for i in range(int(input())):
     except Exception as e:
         print(e)
 
+
+# Day 24: More Linked Lists
+a_list = list({int(input()) for i in range(int(input()))})
+#a_list.sort()  
+print(*(sorted(a_list)))
+  
+  
