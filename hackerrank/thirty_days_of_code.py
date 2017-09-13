@@ -200,5 +200,41 @@ for i in range(int(input())):
 a_list = list({int(input()) for i in range(int(input()))})
 #a_list.sort()  
 print(*(sorted(a_list)))
-  
+
+
+# Day 25: Running Time and Complexity
+from math import factorial
+
+def prime(n):
+    if (factorial(n-1)+1) % n!=0:
+        print("Not prime")
+    else:
+        print("Prime")
+
+for x in range(0, int(input())):
+    prime(int(input()))        
+
+
+# another way    
+import math
+
+def is_prime(n):
+    if n == 2:
+        return True
+    elif n == 1 or (n & 1) == 0:
+        return False
+        
+    for i in range(2, math.ceil(math.sqrt(n)) + 1):
+        if (n % i) == 0:
+            return False
+    
+    return True
+
+p = int(input())
+for i in range(0, p):
+    x = int(input())
+
+    s = "Prime" if (is_prime(x)) else "Not prime"
+    print(s)
+    
   
