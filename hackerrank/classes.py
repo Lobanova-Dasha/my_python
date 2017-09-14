@@ -55,42 +55,51 @@ class Complex(object):
         return '{0:.2f}{1:+.2f}i'.format(self.r,self.j)    
 
 
+# Class 2 - Find the Torsional Angle
+# Task. You are given four points  A,B,C and D  in a 
+# 3-dimensional Cartesian coordinate system. 
+# You are required to print the angle between 
+# the plane made by the points A,B,C and B,C,D in degrees(not radians). 
+# Let the angle be PHI. 
 
-
-
-
-
-class Vector:
-
+class Points(object):
     def __init__(self, x, y, z):
-        self.x = float(x)
-        self.y = float(y)
-        self.z = float(z)
-    
-    def dot(self, other):
-        return self.x*other.x + self.y*other.y + self.z*other.z
-    
-    def cross(self, other):
-        return vector(self.y*other.z-self.z*other.y, self.z*other.x-self.x*other.z, self.x*other.y-self.y*other.x)
-    
-    def mod(self):
-        return pow(self.x**2+self.y**2+self.z**2, 0.5)
-    
-    def __sub__(self, other):
-        return vector(self.x-other.x, self.y-other.y, self.z-other.z)
-    
-    def __add__(self, other):
-        return vector(self.x+other.x, self.y+other.y, self.z+other.z)
-    
-if __name__ == "__main__":
-    
-    A = vector(*map(float, input().strip().split()))
-    B = vector(*map(float, input().strip().split()))
-    C = vector(*map(float, input().strip().split()))
-    D = vector(*map(float, input().strip().split()))
-    AB = B - A
-    BC = C - B
-    CD = D - C
-    X = AB.cross(BC)
-    Y = BC.cross(CD)
-    print("%.2f"%degrees(acos(X.dot(Y)/X.mod()/Y.mod())))
+        self.x = x
+        self.y = y
+        self.z = z
+
+    def __sub__(self, no):
+        x = self.x-no.x
+        y = self.y-no.y
+        z = self.z-no.z
+        return Points(x, y, z)
+
+    def dot(self, no):
+        x = self.x*no.x
+        y = self.y*no.y
+        z = self.z*no.z
+        return x+y+z
+
+    def cross(self, no):
+        x = self.y*no.z - self.z*no.y
+        y = self.z*no.x - self.x*no.z
+        z = self.x*no.y - self.y*no.x
+        return Points(x, y, z)
+
+    def absolute(self):
+        return pow((self.x**2 + self.y**2 + self.z**2), 0.5)
+
+
+if __name__ == '__main__':
+    points = []
+    for i in range(4):
+        a = map(float, input().split())
+        points.append(a)
+
+    a, b, c, d = Points(*points[0]), Points(*points[1]), Points(*points[2]), Points(*points[3])
+    x = (b-a).cross(c-b)
+    y = (c-b).cross(d-c)
+    angle = math.acos(x.dot(y) / (x.absolute() * y.absolute()))
+
+    print('{0:.2f}'.format(math.degrees(angle)))                
+        
