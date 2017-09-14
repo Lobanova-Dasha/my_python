@@ -215,7 +215,7 @@ for x in range(0, int(input())):
     prime(int(input()))        
 
 
-# another way    
+# # another way    
 import math
 
 def is_prime(n):

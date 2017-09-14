@@ -1,6 +1,64 @@
-classes.py
+#! python3
+# classes.py
 
 import math
+
+# Classes: Dealing with Complex Numbers
+# you are given two complex numbers, 
+# and you have to print the result of their 
+# addition, subtraction, multiplication, division and modulus operations.
+# The real and imaginary precision part should be correct up to 
+# two decimal places.
+class Complex(object):
+    def __init__(self, real, imaginary):
+        self.real = real
+        self.imaginary = imaginary
+
+
+    '''addition'''
+    def __add__(self, no):
+        real = self.real + no.real
+        imaginary = self.imaginary + no.imaginary
+        return Complex(real, imaginary)
+
+
+    '''subtraction'''
+    def __sub__(self, no):
+        real = self.real - no.real
+        imaginary = self.imaginary - no.imaginary
+        return Complex(real, imaginary)
+
+
+    '''multiplication'''
+    def __mul__(self, no):
+        real = self.real*no.real - self.imaginary*no.imaginary
+        imaginary = self.real * no.imaginary + self.imaginary * no.real
+        return Complex(real, imaginary)
+
+
+    '''division'''
+    def __div__(self, no):
+        x = float(no.real**2 + no.imaginary**2)
+        y = self * Complex(no.real, -no.imaginary)
+        real = y.real/x
+        imaginary = y.imaginary/x
+        return Complex(real, imaginary)
+    
+
+    '''modulus operations'''
+    def mod(self):
+        real = math.sqrt(self.real**2 + self.imaginary**2)
+        return Complex(real, 0)
+
+
+    def __str__(self) :
+        return '{0:.2f}{1:+.2f}i'.format(self.r,self.j)    
+
+
+
+
+
+
 
 class Vector:
 
