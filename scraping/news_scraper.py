@@ -1,4 +1,5 @@
-#news_scraper.py
+#! python3
+# news_scraper.py
 
 import sys
 import requests
