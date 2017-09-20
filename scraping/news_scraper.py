@@ -62,9 +62,9 @@ while True:
         '''-'''
         print("-"*30)
 
-        value = input("Вы хотите продолжить посик? [Y to continue]: ")
+        value = input("Вы хотите продолжить посик? [y to continue]: ")
         
-        if value == 'Y':
+        if value == 'y':
         	break
         else:
             print("Посик закончен")
