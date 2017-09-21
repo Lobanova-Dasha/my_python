@@ -168,6 +168,59 @@ print(len(max(bin(int(input().strip()))[2:].split('0'))))
 
 # print(num) 
 
+
+# Day 12: Inheritance
+class Person:
+    def __init__(self, firstName, lastName, idNum):
+        self.firstName = firstName
+        self.lastName = lastName
+        self.idNum = idNum
+
+
+    def printPerson(self):
+        print("Name: {}, {}".format(self.lastName, self.firstName))
+        print("ID: {}".format(self.idNum))
+            
+
+class Student(Person):
+    def __init__(self, firstName, lastName, idNum, scores):
+        super().__init__(firstName, lastName, idNum)
+        self.scores = scores
+
+
+    def calculate(self):
+        #scores= list(map(int, scores.split()))
+        avr = sum(scores) // int(numScores)
+        
+        if 90<=avr<=100:
+            return "O"
+
+        elif 80<=avr<90:
+            return "E"
+            
+        elif 70<=avr<80:
+            return "A"
+           
+        elif 55<=avr<70:
+            return "P"
+            
+        elif 40<=avr<55:
+            return "D"
+            
+        elif avr<40:
+            return "T"
+
+# line = input().split()
+# firstName = line[0]
+# lastName = line[1]
+# idNum = line[2]
+# numScores = int(input()) # not needed for Python
+# scores = list( map(int, input().split()) )
+# s = Student(firstName, lastName, idNum, scores)
+# s.printPerson()
+# print("Grade:", s.calculate())            
+
+
 #Day 14: Scope 
 def computeDifference(self):
         self.maximumDifference = max(a) - min(a)
