@@ -9,12 +9,10 @@ import re
 valid_date = r"(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d"
 
     
-
 def get_article_info(**kwargs):
 
     my_url = "https://www.gazeta.ru/search.shtml?p=search&page=0&text={text}&article=&section=&from={from}&to={to}&sort_order=published_desc&input=utf8"
-    
-    
+   
     if re.match(valid_date, params["from"]) and re.match(valid_date, params["to"]):
         return requests.get(my_url, params=params) 
         
@@ -31,7 +29,6 @@ def parse_articles(requests):
     # grab each article
     page = tree.xpath('//div[@class = "div_res"]')
   
-
     print("Входные параметры: ключевое слово - {text}, даты - {from} - {to}".format(**params))
     
     num = 0
@@ -44,7 +41,6 @@ def parse_articles(requests):
     
         """Author"""
         try:
-            #author = item_lxml.xpath('.//*[@class = "s_author_name"]/text()')[0]
             author = item_lxml.xpath('.//*[contains(@class, "author_name")]/text()')[0]
         except IndexError as e:
             author = "Неизвестен" 
@@ -58,14 +54,12 @@ def parse_articles(requests):
         """Summary"""
         summary = item_lxml.xpath('.//p[@class = "intro"]/a/text()')[0]
 
-  
         print(num)
         print("Дата: {}".format(dates))
         print("Автор: {}".format(author))
         print("Название статьи: {}".format(title))
         print("Ссылка: {}".format(link))
         print(summary)
-    
         print("-"*20)
 
 
@@ -76,7 +70,6 @@ while True:
               "from": input("В период с дд.мм.гггг: "),
                 "to": input("По дд.мм.гггг: ")}
   
-
     my_req = get_article_info() 
     parse_articles(my_req)
     
