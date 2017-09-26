@@ -6,19 +6,37 @@ from lxml import html
 import requests
 import re
 
+valid_keyword = r"(\S)"
 valid_date = r"(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d"
 
     
 def get_article_info(**kwargs):
 
-    my_url = "https://www.gazeta.ru/search.shtml?p=search&page=0&text={text}&article=&section=&from={from}&to={to}&sort_order=published_desc&input=utf8"
-   
-    if re.match(valid_date, params["from"]) and re.match(valid_date, params["to"]):
-        return requests.get(my_url, params=params) 
-        
+    
+    if re.match(valid_keyword, params["text"]):
+
+        if re.match(valid_date, params["from"]) and re.match(valid_date, params["to"]):
+    
+            return requests.get('https://www.gazeta.ru/search.shtml', params={
+                                                                'p': 'search',
+                                                       'text': params['text'],
+                                                                'article': '',
+                                                                'section': '',
+                                                       'from': params['from'],
+                                                           'to': params['to'],
+                                               'sort_order': 'published_desc',
+                                                               'input': 'utf8'
+                                                                            })
+     
+        else:
+            print("Sorry, you have typed wrong dates or didn't type them at all")
+            sys.exit()
+
     else:
-        print("Sorry, you have typed a wrong date")
-        sys.exit()      
+        print("Sorry, you didn't type a keyword")
+        sys.exit()          
+   
+                     
 
 
 def parse_articles(requests):
@@ -73,7 +91,7 @@ while True:
     my_req = get_article_info() 
     parse_articles(my_req)
     
-    # Ask an user does he want to continue the search?
+    # Ask user if he wants to continue the search
     value = input("Вы хотите продолжить поиск? [y to continue]: ")
         
     if value == 'y':
