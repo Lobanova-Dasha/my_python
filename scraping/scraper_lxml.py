@@ -11,12 +11,9 @@ valid_date = r"(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d"
 
     
 def get_article_info(**kwargs):
-
-    
     if re.match(valid_keyword, params["text"]):
 
         if re.match(valid_date, params["from"]) and re.match(valid_date, params["to"]):
-    
             return requests.get('https://www.gazeta.ru/search.shtml', 
             	                 params={        'p': 'search',
                                               'text': params['text'],
@@ -27,7 +24,6 @@ def get_article_info(**kwargs):
                                         'sort_order': 'published_desc',
                                              'input': 'utf8'
                                         })
-     
         else:
             print("Sorry, you have typed wrong dates or didn't type them at all")
             sys.exit()
@@ -82,7 +78,6 @@ def parse_articles(requests):
 
 # the program's execution
 while True:
-
     params = {"text": input("Введите ключевое слово: "),
               "from": input("В период с дд.мм.гггг: "),
                 "to": input("По дд.мм.гггг: ")}
