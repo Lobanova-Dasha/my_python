@@ -17,17 +17,17 @@ def get_article_info(**kwargs):
 
         if re.match(valid_date, params["from"]) and re.match(valid_date, params["to"]):
     
-            return requests.get('https://www.gazeta.ru/search.shtml', params={
-                                                        
-                                                        'p': 'search',
-                                                     'text': params['text'],
-                                                  'article': '',
-                                                  'section': '',
-                                                     'from': params['from'],
-                                                       'to': params['to'],
-                                               'sort_order': 'published_desc',
-                                                    'input': 'utf8'
-                                                })
+            return requests.get('https://www.gazeta.ru/search.shtml', 
+            	                 params={
+                                                 'p': 'search',
+                                              'text': params['text'],
+                                           'article': '',
+                                           'section': '',
+                                              'from': params['from'],
+                                                'to': params['to'],
+                                        'sort_order': 'published_desc',
+                                             'input': 'utf8'
+                                        })
      
         else:
             print("Sorry, you have typed wrong dates or didn't type them at all")
