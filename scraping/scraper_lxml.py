@@ -18,15 +18,16 @@ def get_article_info(**kwargs):
         if re.match(valid_date, params["from"]) and re.match(valid_date, params["to"]):
     
             return requests.get('https://www.gazeta.ru/search.shtml', params={
-                                                                'p': 'search',
-                                                       'text': params['text'],
-                                                                'article': '',
-                                                                'section': '',
-                                                       'from': params['from'],
-                                                           'to': params['to'],
+                                                        
+                                                        'p': 'search',
+                                                     'text': params['text'],
+                                                  'article': '',
+                                                  'section': '',
+                                                     'from': params['from'],
+                                                       'to': params['to'],
                                                'sort_order': 'published_desc',
-                                                               'input': 'utf8'
-                                                                            })
+                                                    'input': 'utf8'
+                                                })
      
         else:
             print("Sorry, you have typed wrong dates or didn't type them at all")
@@ -37,8 +38,6 @@ def get_article_info(**kwargs):
         sys.exit()          
    
                      
-
-
 def parse_articles(requests):
     
     # html parsing
@@ -46,6 +45,7 @@ def parse_articles(requests):
     
     # grab each article
     page = tree.xpath('//div[@class = "div_res"]')
+ 
   
     print("Входные параметры: ключевое слово - {text}, даты - {from} - {to}".format(**params))
     
