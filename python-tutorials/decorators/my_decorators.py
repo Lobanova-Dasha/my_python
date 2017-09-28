@@ -63,10 +63,13 @@ def display_info(name, age):
 
 
 # step 4: logger and timer
+from functools import wraps
+
 def my_logger(orig_func):
     import logging
     logging.basicConfig(filename='{}.log'.format(orig_func.__name__), level=logging.INFO)
-
+    
+    @wraps(orig_func)
     def wrapper(*args, **kwargs):
         logging.info('Ran with args: {}, and kwargs: {}'.format(args, kwargs))
         return orig_func(*args, **kwargs)
@@ -77,6 +80,7 @@ def my_logger(orig_func):
 def my_timer(orig_func):
     import time
 
+    @wraps(orig_func)
     def wrapper(*args, **kwargs):
         t1 = time.time()
         result = orig_func(*args, **kwargs)
@@ -86,20 +90,16 @@ def my_timer(orig_func):
 
     return wrapper        
 
-
-@my_logger
-def display_info(name, age):
-    print('display_info ran with arguments ({}, {})'.format(name, age)) 
-
-
-#display_info('Dasha', 22)
-
 import time
 
+@my_logger
 @my_timer
+
 def display_info(name, age):
     time.sleep(1)
     print('display_info ran with arguments ({}, {})'.format(name, age)) 
 
+# display_info = my_timer(display_info)
+# print(display_info.__name__)
 
-#display_info('Andrew', 24)      
+display_info('Tom', 22)  
