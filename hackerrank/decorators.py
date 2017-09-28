@@ -2,21 +2,21 @@
 # decorators.py
 
 
-#Standardize Mobile Number Using Decorators
-# line = [input() for _ in range(int(input()))]
+#1 Standardize Mobile Number Using Decorators
+line = [input() for _ in range(int(input()))]
 
-# def wrapper(orig_func):
-#     def phone(line):
-#         orig_func(["+91 "+c[-10:-5]+" "+c[-5:] for c in line])
-#     return phone
+def wrapper(orig_func):
+    def phone(line):
+        orig_func(["+91 "+c[-10:-5]+" "+c[-5:] for c in line])
+    return phone
 
-# @wrapper
-# def sort_phone(line):
-#     print(*sorted(line), sep='\n')
+@wrapper
+def sort_phone(line):
+    print(*sorted(line), sep='\n')
 
-# sort_phone(line)
+sort_phone(line)
 
-
+#Decorators 2 - Name Directory
 def person_lister(f):
     def inner(people):
         return map(f, sorted(people, key=lambda x: x[2]))  
@@ -29,3 +29,4 @@ def name_format(person):
 
 people = [input().split() for i in range(int(input()))]
 print(*name_format(people), sep='\n')    
+
