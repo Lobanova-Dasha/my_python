@@ -7,21 +7,65 @@ import requests
 import re
 
 
+payload = {
+           'departure': 'BER',
+         'destination': 'MUC',
+        'outboundDate': 2017-12-11,
+          'returnDate': '',
+              'oneway': 1,
+    'openDateOverview': 0,
+          'adultCount': 1,
+          'childCount': 0,
+         'infantCount': 0
+          }
+
+headers = {'Content-Type': 'application/x-www-form-urlencoded',
+             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
+                'Referer': 'https://www.flyniki.com/en/start.php'
+           }
+
+session = requests.Session()
+
+# HEAD requests ask for *just* the headers, which is all you need to grab the
+# session cookie
+session.head('https://www.flyniki.com/en/start.php?', params=payload)
+
+response = session.post(url='http://www.flyniki.com/en/booking/flight/vacancy.php?',
+                        data=payload,
+                        headers=headers
+                       )
+
+print(response.url)
+
+
+#print(response.text)
+
+
+# requests.get("https://www.flyniki.com/en/start.php?")
+
+# resp = session.post("http://www.flyniki.com/en/booking/flight/vacancy.php?departure=BER&destination=HAM&outboundDate=2017-12-11&returnDate=&oneway=1&openDateOverview=0&adultCount=1&childCount=0&infantCount=0")
+# print(resp.url)
+
+# req2 = session.get(resp.url)
+# print(req2.url)
+
+# test = requests.get("https://www.flyniki.com/en/booking/flight/vacancy.php?sid=306b8949fa798b570de3")
+# print(test.url)
 # "_ajax[requestParams][openDateOverview]": "",
 # "_ajax[requestParams][departure]": 'TXL',
 #  "_ajax[requestParams][childCount]": 0,
 
-_ajax = {'requestParams': {'departure':'BER',
-               'destination':'FRA',
-              'outboundDate':'2017-12-11',
-                'returnDate':'2017-12-11',
-                    'oneway': 0,
-          'openDateOverview': 0,
-                'adultCount': 1,
-                'childCount': 0,
-               'infantCount': 0}}
+# _ajax = {'requestParams': {'departure':'BER',
+#                'destination':'FRA',
+#               'outboundDate':'2017-12-11',
+#                 'returnDate':'2017-12-11',
+#                     'oneway': 0,
+#           'openDateOverview': 0,
+#                 'adultCount': 1,
+#                 'childCount': 0,
+#                'infantCount': 0}}
 
-print(_ajax['requestParams']['departure'])               
+# print(_ajax['requestParams']['departure'])               
 
 # payload = {
 # 	  'departure':'BER',
