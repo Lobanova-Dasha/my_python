@@ -1,11 +1,12 @@
 #! python3
 # decorators.py
 import time
+import logging
 from functools import wraps
 
 
 def my_logger(orig_func):
-    import logging
+    
     logging.basicConfig(filename='{}.log'.format(orig_func.__name__), level=logging.INFO)
     
     @wraps(orig_func)
@@ -17,7 +18,6 @@ def my_logger(orig_func):
     
 
 def my_timer(orig_func):
-    import time
 
     @wraps(orig_func)
     def wrapper(*args, **kwargs):
@@ -34,8 +34,9 @@ def my_timer(orig_func):
 def wrapper(orig_func):
     def phone(line):
         orig_func(["+91 "+c[-10:-5]+" "+c[-5:] for c in line])
-    return phone
-    
+        return phone
+    return wrapper    
+        
 
 @my_logger
 @my_timer

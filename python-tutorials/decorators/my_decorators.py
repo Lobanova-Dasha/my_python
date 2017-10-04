@@ -117,9 +117,10 @@ def prefix_decorator(prefix):
     return decorator_func    
 
 
-@prefix_decorator('TESTING:')
+@prefix_decorator('TESTING:')# = prefix_decorator(prefix)(==decorator_func)<(display_info)(name, age)
 def display_info(name, age):
-    print('display_info ran with arguments ({}, {})'.format(name, age)) 
+    print('display_info ran with arguments ({}, {})'.format(name, age))
+
 
 
 #display_info('Travis', 30)  
