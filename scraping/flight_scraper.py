@@ -39,7 +39,9 @@ print(response.url)
 
 
 #print(response.text)
-
+"_ajax[requestParams][openDateOverview]": "",
+"_ajax[requestParams][departure]": 'TXL',
+"_ajax[requestParams][childCount]": 0
 
 # requests.get("https://www.flyniki.com/en/start.php?")
 
@@ -51,9 +53,7 @@ print(response.url)
 
 # test = requests.get("https://www.flyniki.com/en/booking/flight/vacancy.php?sid=306b8949fa798b570de3")
 # print(test.url)
-# "_ajax[requestParams][openDateOverview]": "",
-# "_ajax[requestParams][departure]": 'TXL',
-#  "_ajax[requestParams][childCount]": 0,
+
 
 # _ajax = {'requestParams': {'departure':'BER',
 #                'destination':'FRA',
