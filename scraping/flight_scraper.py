@@ -6,10 +6,6 @@ from lxml import html
 import requests
 import re
 
-import sys
-from lxml import html
-import requests
-import re
 
 
 payload = {
