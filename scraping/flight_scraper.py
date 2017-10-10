@@ -9,18 +9,6 @@ from bs4 import BeautifulSoup
 
 
 
-# payload = {
-#            'departure': 'BER',
-#          'destination': 'MUC',
-#         'outboundDate': 2017-12-11,
-#           'returnDate': '',
-#               'oneway': 1,
-#     'openDateOverview': 0,
-#           'adultCount': 1,
-#           'childCount': 0,
-#          'infantCount': 0
-#           }
-
 headers = {'Content-Type': 'application/x-www-form-urlencoded',
              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
                 'Referer': 'https://www.flyniki.com/en/start.php'
@@ -30,26 +18,8 @@ session = requests.Session()
 
 
 response = session.get(url='http://www.flyniki.com/en/booking/flight/vacancy.php?',
-                        #params=payload,
-                        headers=headers
+                       headers=headers
                        )
-
-#print(response.text)
-# '_ajax[requestParams][adultCount]'	'1'
-# _ajax[requestParams][childCount]	'0'
-# _ajax[requestParams][departure]	'Berlin - Tegel'
-# _ajax[requestParams][destination]	'Paris - Charles de Gaulle'
-# _ajax[requestParams][infantCount]	'0'
-# _ajax[requestParams][oneway]	'on'
-# _ajax[requestParams][openDateOverview]	
-# _ajax[requestParams][outboundDate]	'2017-12-17'
-# _ajax[requestParams][returnDate]	'2017-12-17'
-# _ajax[requestParams][returnDeparture]''	
-# _ajax[requestParams][returnDestination]	''
-# _ajax[templates][]	'flightinfo'
-# _ajax[templates][]	'infos'
-# _ajax[templates][]	'priceoverview'
-# _ajax[templates][]	'main'
 
 page = session.post(response.url,
                     data= {
@@ -77,18 +47,30 @@ page = session.post(response.url,
                     )
 
 print(page.status_code)
-print(page.text)
+#print(page.text)
+
+
+
+tree = html.fromstring(page.content, "html.parser")
+print(tree)
+
+for element in tree:
+	# Selects all div elements no matter where they are in the document
+	# that have an attribute named class with a value of "current"
+    box = tree.xpath('//div[@class = "current"]')
+    for i in box:
+    	# Selects all the span elements that have an attribute named title
+        
+        #item = box.xpath('.//span[@title]/text()')
+        item = box.xpath('.//span[@id = "price"]/title/text()')[1]
+        print(item)
 
 
 
 #//*[@id="priceLabelIdBASEFi_0"]
-tree = html.fromstring(page.content, "html.parser")
-#//*[@id="flightDurationFi_1"]
-# //*[@id="flighttables"]/div[1]/div[2]/table/tbody/tr[3]/td[4]
-box = tree.xpath('//div[@class = "current"]')
-for i in box:
     #test = tree.xpath('//span[@title]/text()')[2]
-    test = box.xpath('.//@title')
+    # test = box.xpath('.//@title')
+    # print(test)
 #     #time = tree.xpath('//span[@id="flightDurationFi_1"]/text()')[0]
 #     #time = tree.xpath('//div[@class = "table-text-left"]')
 
@@ -102,7 +84,8 @@ for i in box:
 #     print(test)
 
 
-
+#//*[@id="flightDurationFi_1"]
+# //*[@id="flighttables"]/div[1]/div[2]/table/tbody/tr[3]/td[4]
 
 #soup = BeautifulSoup(page.content, "html.parser")
 #print(soup.prettify())
