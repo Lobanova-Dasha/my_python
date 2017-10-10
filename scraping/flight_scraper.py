@@ -55,13 +55,13 @@ page = session.post(response.url,
                     data= {
                      '_ajax[requestParams][adultCount]': '1',
                      '_ajax[requestParams][childCount]': '0',
-                      '_ajax[requestParams][departure]':  'Berlin - Tegel',
-                    '_ajax[requestParams][destination]': 'Paris - Charles de Gaulle',
+                      '_ajax[requestParams][departure]':  'TXL',
+                    '_ajax[requestParams][destination]': 'MUC',
                     '_ajax[requestParams][infantCount]':  '0',
                          '_ajax[requestParams][oneway]': 'on',
                '_ajax[requestParams][openDateOverview]': '',    
-                   '_ajax[requestParams][outboundDate]': '2017-12-17',
-                     '_ajax[requestParams][returnDate]': '2017-12-17',
+                   '_ajax[requestParams][outboundDate]': '2017-10-18',
+                     '_ajax[requestParams][returnDate]': '2017-10-18',
                 '_ajax[requestParams][returnDeparture]': '', 
               '_ajax[requestParams][returnDestination]': '',   
                                    '_ajax[templates][]': 'flightinfo',
@@ -77,21 +77,53 @@ page = session.post(response.url,
                     )
 
 print(page.status_code)
-#print(page.text)
+print(page.text)
 
-tree = html.fromstring(page.content, "html.parser") 
-    
+
+
+#//*[@id="priceLabelIdBASEFi_0"]
+tree = html.fromstring(page.content, "html.parser")
+#//*[@id="flightDurationFi_1"]
+# //*[@id="flighttables"]/div[1]/div[2]/table/tbody/tr[3]/td[4]
+box = tree.xpath('//div[@class = "current"]')
+for i in box:
+    #test = tree.xpath('//span[@title]/text()')[2]
+    test = box.xpath('.//@title')
+#     #time = tree.xpath('//span[@id="flightDurationFi_1"]/text()')[0]
+#     #time = tree.xpath('//div[@class = "table-text-left"]')
+
+#     #print(time)
+#     print(test)
+
+# data = tree.xpath('//div[@class="current"]')
+
+# for item in data:
+#     test = data.xpath('//@title')
+#     print(test)
+
+
+
+
+#soup = BeautifulSoup(page.content, "html.parser")
+#print(soup.prettify())
+#tree = html.fromstring(page.content, "html.parser") 
+
+
 # grab each article //*[@id="priceLabelIdPREMFi_1"]//*[@id="price-59da83fa1ae59"] //*[@id="price-59da83fa1ae59"] //*[@id="price-59da83fa1ae59"] './/*[contains(@class, "author_name")]/text()')[0]
 #test = tree.xpath('.//*[contains(@class, "lowest")]/text()')
 #//div[@class = "div_res //*[@id="price-59da83fa1ae59"]
-#//*[@id="flightDepartureFi_0"]
-test = tree.xpath('//*[@id="flightDepartureFi_0"]/text()')
-print(test)
+#//*[@id="flightDepartureFi_0"] //*[@id="flighttables"]/div[1]/div[2]/table/tbody/tr[1]/td[2]
+# test = tree.xpath('//*[@id="flightDepartureFi_0"]/text()')
+# print(test)
 # test = tree.xpath('//div[@class = "lowest"]')
-# for item in test:
+# test = tree.xpath('//td[@class = "table-text-left"]')
+#//*[@id="vacancy_flighttable"]
+# test = tree.xpath('//div[@id = "vacancy_flighttable"]')
 
-#     test2 = test.xpath('.//span[@id = "price-59da83fa1ae59"]/text()')   
-#     print(len(test2))
+# print(len(test))
+# for item in test:
+#     time = test.xpath('.//span[@id = "flightDepartureFi_0"]/time/text()')[2]   
+#     print(time)
 
 # soup = BeautifulSoup(page.content, "html.parser")
 # print(soup.title)
@@ -100,24 +132,4 @@ print(test)
 # news_data = soup.find_all("label", {"id":"priceLabelIdPREMFi_1"}) #//*[@id="priceLabelIdPREMFi_1"]
 # print(type(news_data))
 # print(len(news_data))
-
-# for item in news_data:
-#     print(item.text)
-    #print(item.find("div", {"class": "icon"}).text)
-    
-        # '''Author'''
-        # try:
-        #     print("Автор: {}".format(item.find("span", {"class": "s_author_name"}).text))
-        # except AttributeError as e:
-        #     print("Автор: Неизвестен")
-    
-        # '''Title'''
-        # print("Название статьи: {}".format(item.find("h2", {"class": "h3 no_float"}).text))
-    
-        # '''Link'''
-        # for link in item.h2.find_all('a'):
-        #     print("Ссылка: {}".format(link.get('href')))
-    
-        # '''Summary'''
-        # print(item.find("p", {"class": "intro"}).text)
 
