@@ -9,6 +9,14 @@ from itertools import product
 from operator import itemgetter
 
 
+valid_keyword = r"(\S)"
+valid_date = re.compile(r'''
+                  (2017|2018)  # the year
+                          [-]  # separator
+              (0[1-9]|1[012])  # the month
+                          [-]  # separator
+     (0[1-9]|[12][0-9]|3[01])  # the day
+             ''', re.VERBOSE)
 
 
 headers = {'Content-Type': 'application/x-www-form-urlencoded',
@@ -22,18 +30,28 @@ session = requests.Session()
 response = session.get(url='http://www.flyniki.com/en/booking/flight/vacancy.php?',
                        headers=headers
                        )
+#2017-10-27 TXL MUC
+
+params = {
+               "departure": input("Введите IATA-код откуда летим: "),
+             "destination": input("IATA-код куда летим: "),
+             "oneway": input("Если желаете выполнить посик в одном направлении, введите 'on', иначе пропустите "),
+          "departure_date": input("Дата вылета: гггг-мм-дд "),
+             "return_date": input("Дата возврата: гггг-мм-дд  "),
+                }
+  
 
 page = session.post(response.url,
                     data= {
                      '_ajax[requestParams][adultCount]': '1',
                      '_ajax[requestParams][childCount]': '0',
-                      '_ajax[requestParams][departure]':  'TXL',
-                    '_ajax[requestParams][destination]': 'MUC',
+                      '_ajax[requestParams][departure]': params['departure'],
+                    '_ajax[requestParams][destination]': params['destination'],
                     '_ajax[requestParams][infantCount]':  '0',
-                         '_ajax[requestParams][oneway]': '',
+                         '_ajax[requestParams][oneway]': params['oneway'],
                '_ajax[requestParams][openDateOverview]': '',    
-                   '_ajax[requestParams][outboundDate]': '2017-10-27',
-                     '_ajax[requestParams][returnDate]': '2017-10-27',
+                   '_ajax[requestParams][outboundDate]': params['departure_date'],
+                     '_ajax[requestParams][returnDate]': params['return_date'],
                 '_ajax[requestParams][returnDeparture]': '', 
               '_ajax[requestParams][returnDestination]': '',   
                                    '_ajax[templates][]': 'flightinfo',
@@ -48,10 +66,18 @@ page = session.post(response.url,
                             }
                     )
 
-tree = html.fromstring(page.json()['templates']['main'], "html.parser")
-currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
+try:
+    tree = html.fromstring(page.json()['templates']['main'], "html.parser")
 
-print('\nStatus code:',page.status_code)
+except KeyError as e:
+    print("\nЭто фиаско")
+
+else:    
+    currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
+
+
+#print('\nStatus code:',page.status_code)
+
 
 
 def oneway_flight(response, coin):
@@ -106,8 +132,14 @@ def twoways_flight(response, coin):
         i +=1
         print(str(i)+')', *flight, currency)
 
-twoways_flight(tree, currency)
-#oneway_flight(tree, currency)
+#twoways_flight(tree, currency)
+try:
+    oneway_flight(tree, currency)
+except NameError as e:
+    print(':(')
+except lxml.etree.XMLSyntaxError as e:
+    print('bad')    
+        
   
 
 
