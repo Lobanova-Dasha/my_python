@@ -19,66 +19,49 @@ valid_date = re.compile(r'''
              ''', re.VERBOSE)
 
 
-headers = {'Content-Type': 'application/x-www-form-urlencoded',
-             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
-                'Referer': 'https://www.flyniki.com/en/start.php'
-           }
+def get_flight_info(**kwargs):
 
-session = requests.Session()
+    session = requests.Session()
+    
+    headers = {'Content-Type': 'application/x-www-form-urlencoded',
+                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
+                    'Referer': 'https://www.flyniki.com/en/start.php'
+              }
 
-
-response = session.get(url='http://www.flyniki.com/en/booking/flight/vacancy.php?',
+    get_req = session.get(url='http://www.flyniki.com/en/booking/flight/vacancy.php?',
                        headers=headers
                        )
-#2017-10-27 TXL MUC
 
-params = {
-               "departure": input("Введите IATA-код откуда летим: "),
-             "destination": input("IATA-код куда летим: "),
-             "oneway": input("Если желаете выполнить посик в одном направлении, введите 'on', иначе пропустите "),
-          "departure_date": input("Дата вылета: гггг-мм-дд "),
-             "return_date": input("Дата возврата: гггг-мм-дд  "),
-                }
-  
-
-page = session.post(response.url,
-                    data= {
-                     '_ajax[requestParams][adultCount]': '1',
-                     '_ajax[requestParams][childCount]': '0',
-                      '_ajax[requestParams][departure]': params['departure'],
-                    '_ajax[requestParams][destination]': params['destination'],
-                    '_ajax[requestParams][infantCount]':  '0',
-                         '_ajax[requestParams][oneway]': params['oneway'],
-               '_ajax[requestParams][openDateOverview]': '',    
-                   '_ajax[requestParams][outboundDate]': params['departure_date'],
-                     '_ajax[requestParams][returnDate]': params['return_date'],
-                '_ajax[requestParams][returnDeparture]': '', 
-              '_ajax[requestParams][returnDestination]': '',   
-                                   '_ajax[templates][]': 'flightinfo',
-                                   '_ajax[templates][]':'infos',
-                                   '_ajax[templates][]':'priceoverview',
-                                   '_ajax[templates][]':'main'
-                            },
-                    headers={
+    if re.match(valid_date, params["departure_date"]) and re.match(valid_date, params["return_date"]):
+        return session.post(get_req.url,
+                            data= {
+                           '_ajax[requestParams][adultCount]': '1',
+                           '_ajax[requestParams][childCount]': '0',
+                            '_ajax[requestParams][departure]': params['departure'],
+                          '_ajax[requestParams][destination]': params['destination'],
+                          '_ajax[requestParams][infantCount]':  '0',
+                               '_ajax[requestParams][oneway]': params['oneway'],
+                     '_ajax[requestParams][openDateOverview]': '',    
+                         '_ajax[requestParams][outboundDate]': params['departure_date'],
+                           '_ajax[requestParams][returnDate]': params['return_date'],
+                      '_ajax[requestParams][returnDeparture]': '', 
+                    '_ajax[requestParams][returnDestination]': '',   
+                                         '_ajax[templates][]': 'flightinfo',
+                                         '_ajax[templates][]':'infos',
+                                         '_ajax[templates][]':'priceoverview',
+                                         '_ajax[templates][]':'main'
+                                    },
+                           headers={
                           'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.48 Safari/537.36',
                         'Content-Type': 'application/x-www-form-urlencoded',
-                             'Referer': response.url
-                            }
-                    )
+                             'Referer': get_req.url
+                                   }
+                            )
 
-try:
-    tree = html.fromstring(page.json()['templates']['main'], "html.parser")
-
-except KeyError as e:
-    print("\nЭто фиаско")
-
-else:    
-    currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
-
-
-#print('\nStatus code:',page.status_code)
-
-
+    else:
+        print("Sorry, you have typed wrong dates or didn't type them at all")
+        sys.exit()
+ 
 
 def oneway_flight(response, coin):
     #tree = html.fromstring(page.json()['templates']['main'], "html.parser")
@@ -97,7 +80,6 @@ def oneway_flight(response, coin):
         print(str(i)+')', *flight, currency)
         
         
-
 def twoways_flight(response, coin):
     #tree = html.fromstring(page.json()['templates']['main'], "html.parser")
     #currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
@@ -132,41 +114,37 @@ def twoways_flight(response, coin):
         i +=1
         print(str(i)+')', *flight, currency)
 
-#twoways_flight(tree, currency)
+
+
+
+# the program's execution
+params = {
+               "departure": input("Введите IATA-код откуда летим: "),
+             "destination": input("IATA-код куда летим: "),
+             "oneway": input("Если желаете выполнить посик в одном направлении, введите 'on', иначе пропустите "),
+          "departure_date": input("Дата вылета: гггг-мм-дд "),
+             "return_date": input("Дата возврата: гггг-мм-дд  "),
+                }
+
+
+page = get_flight_info()
+
 try:
-    oneway_flight(tree, currency)
+    tree = html.fromstring(page.json()['templates']['main'], "html.parser")
+
+except KeyError as e:
+    print("\nЭто фиаско")
+
+else:    
+    currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
+
+
+try:
+    twoways_flight(tree, currency)
+    #oneway_flight(tree, currency)
 except NameError as e:
     print(':(')
 except lxml.etree.XMLSyntaxError as e:
     print('bad')    
         
   
-
-
-
-#table_head = "FLIGHT    START/END   DURATION      CLASS          PRICE"
-# box = tree.xpath('//div[@class="outbound block"]//div[@class="lowest"]')
-# print("Outbound block".center(60, '='))
-# print(table_head)
-# num = 0
-# for title in box:
-#     num += 1
-#     data = title.xpath('./span/@title')
-#     #price = float(((((data[0]).split(","))[-1]).split())[-1])
-#     print(data[0], currency)
-#     # print(price)
-# print('Total count of outbound flights:', num)    
-
-# print('')
-# print('Return block'.center(60, '='))
-# print(table_head)
-# return_box = tree.xpath('//div[@class="return block"]//div[@class="lowest"]')
-# num = 0
-# for title in return_box:
-#     num += 1
-#     data = title.xpath('./span/@title')
-#     #price = float(((((data[0]).split(","))[-1]).split())[-1])
-#     print(data[0], currency)
-#     #print(price)
-# print('Total count of return flights:', num)        
-
