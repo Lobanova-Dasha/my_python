@@ -10,23 +10,6 @@ from itertools import product
 from operator import itemgetter
 
 
-# valid_keyword = r"(\S)"
-# valid_date = re.compile(r'''
-#                   (2017|2018)  # the year
-#                           [-]  # separator
-#               (0[1-9]|1[012])  # the month
-#                           [-]  # separator
-#      (0[1-9]|[12][0-9]|3[01])  # the day
-#              ''', re.VERBOSE)
-
-# def validate_params(**kwargs):
-#     if len(params['departure'])==3 and len(params['destination'])==3:
-#         try:
-#             datetime.datetime.strptime(params['departure_date'], '%Y-%m-%d')
-#         except ValueError:
-#             raise ValueError("Incorrect data format, should be YYYY-MM-DD")
-#     else:
-#         print('Incorrect code') 
 
 def validate_date(**kwargs):
     try:
@@ -45,8 +28,6 @@ def validate_iata(**kwargs):
             print('Sorry, IATA code must contain definitely 3 letters.Try again!')    
     else:
         print('Sorry, IATA code must contain only letters. Try again!') 
-
-           
 
 
 def build_request(**kwargs):
