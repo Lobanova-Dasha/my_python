@@ -4,22 +4,52 @@
 import sys
 import requests
 import re
+import datetime
 from lxml import html
 from itertools import product
 from operator import itemgetter
 
 
-valid_keyword = r"(\S)"
-valid_date = re.compile(r'''
-                  (2017|2018)  # the year
-                          [-]  # separator
-              (0[1-9]|1[012])  # the month
-                          [-]  # separator
-     (0[1-9]|[12][0-9]|3[01])  # the day
-             ''', re.VERBOSE)
+# valid_keyword = r"(\S)"
+# valid_date = re.compile(r'''
+#                   (2017|2018)  # the year
+#                           [-]  # separator
+#               (0[1-9]|1[012])  # the month
+#                           [-]  # separator
+#      (0[1-9]|[12][0-9]|3[01])  # the day
+#              ''', re.VERBOSE)
+
+# def validate_params(**kwargs):
+#     if len(params['departure'])==3 and len(params['destination'])==3:
+#         try:
+#             datetime.datetime.strptime(params['departure_date'], '%Y-%m-%d')
+#         except ValueError:
+#             raise ValueError("Incorrect data format, should be YYYY-MM-DD")
+#     else:
+#         print('Incorrect code') 
+
+def validate_date(**kwargs):
+    try:
+        datetime.datetime.strptime(params['departure_date'], '%Y-%m-%d')
+        print("good job")
+    except ValueError:
+        raise ValueError("Incorrect data format of departure_date, should be YYYY-MM-DD")
 
 
-def get_flight_info(**kwargs):
+def validate_iata(**kwargs):
+    if params['departure'].isalpha() and params['destination'].isalpha():
+    
+        if len(params['departure'])==3 and len(params['destination'])==3:
+            validate_date()
+        else:
+            print('Sorry, IATA code must contain definitely 3 letters.Try again!')    
+    else:
+        print('Sorry, IATA code must contain only letters. Try again!') 
+
+           
+
+
+def build_request(**kwargs):
 
     session = requests.Session()
     
@@ -32,8 +62,8 @@ def get_flight_info(**kwargs):
                        headers=headers
                        )
 
-    if re.match(valid_date, params["departure_date"]) and re.match(valid_date, params["return_date"]):
-        return session.post(get_req.url,
+
+    return session.post(get_req.url,
                             data= {
                            '_ajax[requestParams][adultCount]': '1',
                            '_ajax[requestParams][childCount]': '0',
@@ -58,35 +88,21 @@ def get_flight_info(**kwargs):
                                    }
                             )
 
-    else:
-        print("Sorry, you have typed wrong dates or didn't type them at all")
-        sys.exit()
- 
 
 def oneway_flight(response, coin):
-    #tree = html.fromstring(page.json()['templates']['main'], "html.parser")
-
-    box = tree.xpath('//div[@class="lowest"]')
-    flights = [title.xpath('./span/@title') for title in box]
-
-
-    #currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
-    table_head = " FLIGHT      START/END     DURATION      CLASS        PRICE"
-    
-    print(table_head)
-    i = 0
-    for flight in flights[:10]:
-        i += 1
-        print(str(i)+')', *flight, currency)
-        
-        
-def twoways_flight(response, coin):
-    #tree = html.fromstring(page.json()['templates']['main'], "html.parser")
-    #currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
-    #print(currency)
 
     outbound_tree = tree.xpath('//div[@class="outbound block"]//div[@class="lowest"]')
     outbound_flights = [title.xpath('./span/@title')[0] for title in outbound_tree]
+
+    for flight in outbound_flights[:10]:
+        print(*flight, currency)
+
+    return outbound_flights
+           
+        
+def twoways_flight(response, coin):
+
+    outbound_flights = oneway_flight(tree, currency)
 
     return_tree = tree.xpath('//div[@class="return block"]//div[@class="lowest"]')
     return_flights = [title.xpath('./span/@title')[0] for title in return_tree]
@@ -102,9 +118,8 @@ def twoways_flight(response, coin):
     for i in combinations[:10]:
         out_price = float(i[0].split()[-1])
         return_price = float(i[-1].split()[-1])
-        #print("Out {}, return {}".format(out_price, return_price))
         total = out_price + return_price
-        #print("total price:", round(total,2), currency)
+     
         element = [i[0], currency, '   ', i[1], currency, '   Total price: ', round(total,2)]
         result.append(element)
     
@@ -116,35 +131,37 @@ def twoways_flight(response, coin):
 
 
 
-
 # the program's execution
 params = {
                "departure": input("Введите IATA-код откуда летим: "),
              "destination": input("IATA-код куда летим: "),
-             "oneway": input("Если желаете выполнить посик в одном направлении, введите 'on', иначе пропустите "),
+             "oneway": "",
           "departure_date": input("Дата вылета: гггг-мм-дд "),
              "return_date": input("Дата возврата: гггг-мм-дд  "),
                 }
+#validate_date()
+validate_iata()
+# validate_params()
+# page = build_request()
+
+# page = get_flight_info()
+
+# try:
+#     tree = html.fromstring(page.json()['templates']['main'], "html.parser")
+
+# except KeyError as e:
+#     print("\nЭто фиаско")
+
+# else:    
+#     currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
 
 
-page = get_flight_info()
-
-try:
-    tree = html.fromstring(page.json()['templates']['main'], "html.parser")
-
-except KeyError as e:
-    print("\nЭто фиаско")
-
-else:    
-    currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
-
-
-try:
-    twoways_flight(tree, currency)
-    #oneway_flight(tree, currency)
-except NameError as e:
-    print(':(')
-except lxml.etree.XMLSyntaxError as e:
-    print('bad')    
+# try:
+#     twoways_flight(tree, currency)
+#     #oneway_flight(tree, currency)
+# except NameError as e:
+#     print('error')
+# except lxml.etree.XMLSyntaxError as e:
+#     print('bad')    
         
   
