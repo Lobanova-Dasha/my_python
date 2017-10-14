@@ -15,6 +15,7 @@ def validate_date(**kwargs):
     try:
         datetime.datetime.strptime(params['departure_date'], '%Y-%m-%d')
         print("good job")
+        return True
     except ValueError:
         raise ValueError("Incorrect data format of departure_date, should be YYYY-MM-DD")
 
@@ -23,11 +24,13 @@ def validate_iata(**kwargs):
     if params['departure'].isalpha() and params['destination'].isalpha():
     
         if len(params['departure'])==3 and len(params['destination'])==3:
-            validate_date()
+            return True
         else:
-            print('Sorry, IATA code must contain definitely 3 letters.Try again!')    
+            print('Sorry, IATA code must contain definitely 3 letters.Try again!')
+            return False    
     else:
-        print('Sorry, IATA code must contain only letters. Try again!') 
+        print('Sorry, IATA code must contain only letters. Try again!')
+        return False 
 
 
 def build_request(**kwargs):
@@ -120,29 +123,29 @@ params = {
           "departure_date": input("Дата вылета: гггг-мм-дд "),
              "return_date": input("Дата возврата: гггг-мм-дд  "),
                 }
-#validate_date()
-validate_iata()
-# validate_params()
-# page = build_request()
-
-# page = get_flight_info()
-
-# try:
-#     tree = html.fromstring(page.json()['templates']['main'], "html.parser")
-
-# except KeyError as e:
-#     print("\nЭто фиаско")
-
-# else:    
-#     currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
 
 
-# try:
-#     twoways_flight(tree, currency)
-#     #oneway_flight(tree, currency)
-# except NameError as e:
-#     print('error')
-# except lxml.etree.XMLSyntaxError as e:
-#     print('bad')    
+if validate_iata() and validate_date():
+    
+    page = build_request()
+
+
+
+    try:
+        tree = html.fromstring(page.json()['templates']['main'], "html.parser")
+
+    except KeyError as e:
+        print("\nЭто фиаско")
+    else:    
+        currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
+
+
+    try:
+        twoways_flight(tree, currency)
+        #oneway_flight(tree, currency)
+    except NameError as e:
+        print('error')
+    except lxml.etree.XMLSyntaxError as e:
+        print('bad')    
         
   
