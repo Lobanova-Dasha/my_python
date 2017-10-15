@@ -3,21 +3,55 @@
 
 import sys
 import requests
-import re
-import datetime
 from lxml import html
 from itertools import product
 from operator import itemgetter
+from datetime import date, datetime, timedelta
 
 
 
 def validate_date(**kwargs):
+
+    one_year = timedelta(days=365) 
+    today = date.today()
+    y_m_d = lambda x: map(int, x.split('-'))
+
     try:
-        datetime.datetime.strptime(params['departure_date'], '%Y-%m-%d')
-        print("good job")
-        return True
-    except ValueError:
-        raise ValueError("Incorrect data format of departure_date, should be YYYY-MM-DD")
+
+        datetime.strptime(params['departure_date'], '%Y-%m-%d')
+        print('good dep format')
+
+        dep = date(*y_m_d(params['departure_date']))
+
+        if today<=dep<=(dep+one_year):
+            print('Valid dep')
+        
+            if not params['return_date']: 
+                params['oneway']='on'
+                return True
+    
+            else:
+             
+                try:
+                    datetime.strptime(params['return_date'], '%Y-%m-%d')
+                    print('good dest format')
+
+                    dest = date(*y_m_d(params['return_date'])) 
+
+                    if dep<=dest<=(dest+one_year):
+                        print("Valid dest")
+                        return True
+                    else:
+                        print('Not valid dest: past time')
+        
+                except ValueError as e:
+                    print("Incorrect data format of departure_date: ", e)   
+
+        else:
+            print('Not valid dep: past time')
+        
+    except ValueError as e:
+        print("Incorrect data format of departure_date: ", e)
 
 
 def validate_iata(**kwargs):
@@ -78,8 +112,11 @@ def oneway_flight(response, coin):
     outbound_tree = tree.xpath('//div[@class="outbound block"]//div[@class="lowest"]')
     outbound_flights = [title.xpath('./span/@title')[0] for title in outbound_tree]
 
-    for flight in outbound_flights[:10]:
-        print(*flight, currency)
+    if params['oneway']:
+        for flight in outbound_flights[:10]:
+            print(*flight, currency)
+    else:
+        pass        
 
     return outbound_flights
            
@@ -116,7 +153,10 @@ def twoways_flight(response, coin):
 
 
 # the program's execution
-params = {
+
+
+if __name__ == '__main__':
+    params = {
                "departure": input("Введите IATA-код откуда летим: "),
              "destination": input("IATA-код куда летим: "),
              "oneway": "",
@@ -125,27 +165,37 @@ params = {
                 }
 
 
-if validate_iata() and validate_date():
+    if validate_iata() and validate_date():
     
-    page = build_request()
+        page = build_request()
 
 
 
-    try:
-        tree = html.fromstring(page.json()['templates']['main'], "html.parser")
+        try:
+            tree = html.fromstring(page.json()['templates']['main'], "html.parser")
 
-    except KeyError as e:
-        print("\nЭто фиаско")
-    else:    
-        currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
+        except KeyError as e:
+            print("\nЭто фиаско")
+        else:    
+            currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
+
+        if params['oneway']:
+            oneway_flight(tree, currency)
+        else:
+            twoways_flight(tree, currency)
+                
 
 
-    try:
-        twoways_flight(tree, currency)
-        #oneway_flight(tree, currency)
-    except NameError as e:
-        print('error')
-    except lxml.etree.XMLSyntaxError as e:
-        print('bad')    
-        
+
+        # try:
+        #     #twoways_flight(tree, currency)
+        #     oneway_flight(tree, currency)
+        # except NameError as e:
+        #     print('error')
+        # except lxml.etree.XMLSyntaxError as e:
+        #     print('bad')
+
+
+
+
   
