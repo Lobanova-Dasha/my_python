@@ -9,7 +9,6 @@ from operator import itemgetter
 from datetime import date, datetime, timedelta
 
 
-
 def validate_date(**kwargs):
 
     one_year = timedelta(days=365) 
@@ -107,6 +106,12 @@ def build_request(**kwargs):
                             )
 
 
+def build_tree_lxml(page):
+    tree = html.fromstring(page.json()['templates']['main'], "html.parser")
+    currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
+    return tree, currency
+    
+
 def oneway_flight(response, coin):
 
     outbound_tree = tree.xpath('//div[@class="outbound block"]//div[@class="lowest"]')
@@ -151,11 +156,9 @@ def twoways_flight(response, coin):
         print(str(i)+')', *flight, currency)
 
 
-
 # the program's execution
-
-
 if __name__ == '__main__':
+
     params = {
                "departure": input("Введите IATA-код откуда летим: "),
              "destination": input("IATA-код куда летим: "),
@@ -164,36 +167,15 @@ if __name__ == '__main__':
              "return_date": input("Дата возврата: гггг-мм-дд  "),
                 }
 
-
     if validate_iata() and validate_date():
     
         page = build_request()
-
-
-
-        try:
-            tree = html.fromstring(page.json()['templates']['main'], "html.parser")
-
-        except KeyError as e:
-            print("\nЭто фиаско")
-        else:    
-            currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
+        tree, currency = build_tree_lxml(page)
 
         if params['oneway']:
             oneway_flight(tree, currency)
         else:
             twoways_flight(tree, currency)
-                
-
-
-
-        # try:
-        #     #twoways_flight(tree, currency)
-        #     oneway_flight(tree, currency)
-        # except NameError as e:
-        #     print('error')
-        # except lxml.etree.XMLSyntaxError as e:
-        #     print('bad')
 
 
 
