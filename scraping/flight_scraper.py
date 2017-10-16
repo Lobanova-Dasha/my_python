@@ -10,13 +10,10 @@ from datetime import date, datetime, timedelta
 
 
 def validate_date(input_date):
-    
- 
+    """checks format of input_date"""
     try:
-        '''checks format of input_date'''
         datetime.strptime(input_date, '%Y-%m-%d') 
-        return date(*map(int, input_date.split('-')))
-          
+        return date(*map(int, input_date.split('-')))          
     except ValueError as e:
         print("Incorrect data format of the entered date: {}. Please, try again!".format(e))
 
@@ -41,14 +38,18 @@ def validate_dates(**kwargs):
                   else:
                       print("Return date wasn't validated: must be between {} and {}. Please, try again!". format(str(dep_date), str(one_year)))                
         else:
-            print("Depature date wasn't validated: must be between {} and {}. Please, try again!". format(str(toda), str(one_year)))
+            print("Depature date wasn't validated: must be between {} and {}. Please, try again!". format(str(today), str(one_year)))
 
 
 def validate_iata(**kwargs):
     if params['dep_iata'].isalpha() and params['dest_iata'].isalpha():
     
         if len(params['dep_iata'])==3 and len(params['dest_iata'])==3:
-            return True
+            if params['dep_iata'] != params['dest_iata']: 
+                return True
+            else:
+                print('codes can not be the same')    
+
         else:
             print('Sorry, IATA code must contain definitely 3 letters.Please, try again!')
                 
@@ -114,7 +115,7 @@ def oneway_flight(response, coin):
 
     outbound_tree = tree.xpath('//div[@class="outbound block"]//div[@class="lowest"]')
     outbound_flights = [title.xpath('./span/@title')[0] for title in outbound_tree]
-
+    
     if params['oneway']:
         for flight in enumerate(outbound_flights[:10], 1):
             print(*flight, currency)
@@ -126,7 +127,8 @@ def oneway_flight(response, coin):
         
 def twoways_flight(response, coin):
 
-    outbound_flights = oneway_flight(tree, currency)
+    outbound_flights = oneway_flight(tree)[0]
+    currency = oneway_flight(tree)[1] 
 
     return_tree = tree.xpath('//div[@class="return block"]//div[@class="lowest"]')
     return_flights = [title.xpath('./span/@title')[0] for title in return_tree]
@@ -165,7 +167,8 @@ if __name__ == '__main__':
 
     if validate_iata() and validate_dates():
         page = build_request()
-
+        page.raise_for_status()
+        
         if build_tree_lxml(page):
             tree, currency = build_tree_lxml(page)
              
@@ -173,6 +176,7 @@ if __name__ == '__main__':
                 oneway_flight(tree, currency)
             else:
                 twoways_flight(tree, currency)
+
 
 # if __name__ == '__main__':
 #     main()           
