@@ -17,48 +17,41 @@ def validate_date(input_date):
     try:
         '''checks format of input_date'''
         datetime.strptime(input_date, '%Y-%m-%d') 
-        print('good dep and dest format')
-
-        date_format = date(*map(int, input_date.split('-')))
         
+        '''checks for the correct time interval'''
+        date_format = date(*map(int, input_date.split('-')))
         if today<=date_format<=one_year:
-            print('Valid dep')
             return True
         else:
-            print('Not valid dep or dest: past time')
+            print("Date wasn't validated: must be between {} and {}. Please, try again". format(str(today), str(one_year)))
         
     except ValueError as e:
-        print("Incorrect data format of departure_date or dest format: ", e)
+        print("Incorrect data format of the entered date: {}. Please, try again".format(e))
 
 
-def choose(**kwargs):
+def validate_dates(**kwargs):
+
     if not params['return_date']:
         params['oneway']='on'
-        print("You've choosen to search oneway")
-        if validate_date(params['departure_date']):
-            return True   
-    
+        print("\nThe search will be executed in oneway direction\n")
+        return bool(validate_date(params['dep_date']))
+                
     else:
-
-        print("You've choosen to search in two ways direction")
-        if validate_date(params['departure_date']) and validate_date(params['return_date']):
-            print('Sucsess')
-            return True
-        else:
-            print('not valid, Try Again!')  
+        return bool(validate_date(params['dep_date']) and validate_date(params['return_date']))
+            
 
 
 def validate_iata(**kwargs):
-    if params['departure'].isalpha() and params['destination'].isalpha():
+    if params['dep_iata'].isalpha() and params['dest_iata'].isalpha():
     
-        if len(params['departure'])==3 and len(params['destination'])==3:
+        if len(params['dep_iata'])==3 and len(params['dest_iata'])==3:
             return True
         else:
-            print('Sorry, IATA code must contain definitely 3 letters.Try again!')
-            return False    
+            print('Sorry, IATA code must contain definitely 3 letters.Please, try again!')
+                
     else:
-        print('Sorry, IATA code must contain only letters. Try again!')
-        return False 
+        print('Sorry, IATA code must contain only letters. Please, try again!')
+       
 
 
 def build_request(**kwargs):
@@ -79,12 +72,12 @@ def build_request(**kwargs):
                             data= {
                            '_ajax[requestParams][adultCount]': '1',
                            '_ajax[requestParams][childCount]': '0',
-                            '_ajax[requestParams][departure]': params['departure'],
-                          '_ajax[requestParams][destination]': params['destination'],
+                            '_ajax[requestParams][departure]': params['dep_iata'],
+                          '_ajax[requestParams][destination]': params['dest_iata'],
                           '_ajax[requestParams][infantCount]':  '0',
                                '_ajax[requestParams][oneway]': params['oneway'],
                      '_ajax[requestParams][openDateOverview]': '',    
-                         '_ajax[requestParams][outboundDate]': params['departure_date'],
+                         '_ajax[requestParams][outboundDate]': params['dep_date'],
                            '_ajax[requestParams][returnDate]': params['return_date'],
                       '_ajax[requestParams][returnDeparture]': '', 
                     '_ajax[requestParams][returnDestination]': '',   
@@ -159,14 +152,14 @@ def twoways_flight(response, coin):
 if __name__ == '__main__':
 
     params = {
-               "departure": input("Введите IATA-код откуда летим: ").upper(),
-             "destination": input("IATA-код куда летим: ").upper(),
-             "oneway": "",
-          "departure_date": input("Дата вылета: гггг-мм-дд "),
-             "return_date": input("Дата возврата: гггг-мм-дд  "),
-                }
+                   "dep_iata": input("Enter the IATA code of the departure: ").upper(),
+                  "dest_iata": input("Enter the IATA code of the destination: ").upper(),
+                     "oneway": "",
+                   "dep_date": input("Enter the departure date YYYY-MM-DD:  "),
+                "return_date": input("Enter the return date YYYY-MM-DD [optional parameter]: "),
+              }
 
-    if validate_iata() and choose():
+    if validate_iata() and validate_dates():
     
         page = build_request()
         try:
@@ -178,6 +171,9 @@ if __name__ == '__main__':
             oneway_flight(tree, currency)
         else:
             twoways_flight(tree, currency)
+
+# if __name__ == '__main__':
+#     main()           
 
 
 
