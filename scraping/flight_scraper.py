@@ -9,48 +9,43 @@ from operator import itemgetter
 from datetime import date, datetime, timedelta
 
 
-def validate_date(**kwargs):
-
-    one_year = timedelta(days=365) 
-    today = date.today()
-    y_m_d = lambda x: map(int, x.split('-'))
-
-    try:
-
-        datetime.strptime(params['departure_date'], '%Y-%m-%d')
-        print('good dep format')
-
-        dep = date(*y_m_d(params['departure_date']))
-
-        if today<=dep<=(dep+one_year):
-            print('Valid dep')
-        
-            if not params['return_date']: 
-                params['oneway']='on'
-                return True
+def validate_date(input_date):
     
-            else:
-             
-                try:
-                    datetime.strptime(params['return_date'], '%Y-%m-%d')
-                    print('good dest format')
+    today = date.today()
+    one_year = today + timedelta(days=360) 
+  
+    try:
+        '''checks format of input_date'''
+        datetime.strptime(input_date, '%Y-%m-%d') 
+        print('good dep and dest format')
 
-                    dest = date(*y_m_d(params['return_date'])) 
-
-                    if dep<=dest<=(dest+one_year):
-                        print("Valid dest")
-                        return True
-                    else:
-                        print('Not valid dest: past time')
+        date_format = date(*map(int, input_date.split('-')))
         
-                except ValueError as e:
-                    print("Incorrect data format of departure_date: ", e)   
-
+        if today<=date_format<=one_year:
+            print('Valid dep')
+            return True
         else:
-            print('Not valid dep: past time')
+            print('Not valid dep or dest: past time')
         
     except ValueError as e:
-        print("Incorrect data format of departure_date: ", e)
+        print("Incorrect data format of departure_date or dest format: ", e)
+
+
+def choose(**kwargs):
+    if not params['return_date']:
+        params['oneway']='on'
+        print("You've choosen to search oneway")
+        if validate_date(params['departure_date']):
+            return True   
+    
+    else:
+
+        print("You've choosen to search in two ways direction")
+        if validate_date(params['departure_date']) and validate_date(params['return_date']):
+            print('Sucsess')
+            return True
+        else:
+            print('not valid, Try Again!')  
 
 
 def validate_iata(**kwargs):
@@ -107,9 +102,15 @@ def build_request(**kwargs):
 
 
 def build_tree_lxml(page):
-    tree = html.fromstring(page.json()['templates']['main'], "html.parser")
-    currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
-    return tree, currency
+    try:
+        tree = html.fromstring(page.json()['templates']['main'], "html.parser")
+        currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
+    except IndexError as e:
+        print(e)
+    # except TypeError as e:
+    #     print(e)    
+    else:        
+        return tree, currency
     
 
 def oneway_flight(response, coin):
@@ -118,7 +119,7 @@ def oneway_flight(response, coin):
     outbound_flights = [title.xpath('./span/@title')[0] for title in outbound_tree]
 
     if params['oneway']:
-        for flight in outbound_flights[:10]:
+        for flight in enumerate(outbound_flights[:10], 1):
             print(*flight, currency)
     else:
         pass        
@@ -134,7 +135,7 @@ def twoways_flight(response, coin):
     return_flights = [title.xpath('./span/@title')[0] for title in return_tree]
 
     combinations = [*product(outbound_flights, return_flights)]
-    table_head = "    FLIGHT      START/END     DURATION     CLASS      PRICE     "
+    table_head = "  FLIGHT    START/END    DURATION      CLASS         PRICE      "
 
     print('The total count of outbound flights: {}'.format(len(outbound_flights)))
     print('The total count of return flights: {}'.format(len(return_flights)))
@@ -144,33 +145,34 @@ def twoways_flight(response, coin):
     for i in combinations[:10]:
         out_price = float(i[0].split()[-1])
         return_price = float(i[-1].split()[-1])
-        total = out_price + return_price
+        total = round((out_price + return_price),2)
      
-        element = [i[0], currency, '   ', i[1], currency, '   Total price: ', round(total,2)]
+        element = '{}, {}, {}, {} Total price: {}'.format(i[0], currency, i[1], currency, total)
         result.append(element)
     
-    i=0
     print(table_head*2)
-    for flight in sorted(result, key=itemgetter(-1)):
-        i +=1
-        print(str(i)+')', *flight, currency)
+    for flight in enumerate(sorted(result, key=itemgetter(-1)), 1):
+        print(*flight, currency)
 
 
 # the program's execution
 if __name__ == '__main__':
 
     params = {
-               "departure": input("Введите IATA-код откуда летим: "),
-             "destination": input("IATA-код куда летим: "),
+               "departure": input("Введите IATA-код откуда летим: ").upper(),
+             "destination": input("IATA-код куда летим: ").upper(),
              "oneway": "",
           "departure_date": input("Дата вылета: гггг-мм-дд "),
              "return_date": input("Дата возврата: гггг-мм-дд  "),
                 }
 
-    if validate_iata() and validate_date():
+    if validate_iata() and choose():
     
         page = build_request()
-        tree, currency = build_tree_lxml(page)
+        try:
+            tree, currency = build_tree_lxml(page)
+        except TypeError as e:
+            print(e)     
 
         if params['oneway']:
             oneway_flight(tree, currency)
