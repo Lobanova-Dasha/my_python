@@ -11,34 +11,37 @@ from datetime import date, datetime, timedelta
 
 def validate_date(input_date):
     
-    today = date.today()
-    one_year = today + timedelta(days=360) 
-  
+ 
     try:
         '''checks format of input_date'''
         datetime.strptime(input_date, '%Y-%m-%d') 
-        
-        '''checks for the correct time interval'''
-        date_format = date(*map(int, input_date.split('-')))
-        if today<=date_format<=one_year:
-            return True
-        else:
-            print("Date wasn't validated: must be between {} and {}. Please, try again". format(str(today), str(one_year)))
-        
+        return date(*map(int, input_date.split('-')))
+          
     except ValueError as e:
-        print("Incorrect data format of the entered date: {}. Please, try again".format(e))
+        print("Incorrect data format of the entered date: {}. Please, try again!".format(e))
 
 
 def validate_dates(**kwargs):
+    
+    today = date.today()
+    one_year = today + timedelta(days=360) 
 
-    if not params['return_date']:
-        params['oneway']='on'
-        print("\nThe search will be executed in oneway direction\n")
-        return bool(validate_date(params['dep_date']))
-                
-    else:
-        return bool(validate_date(params['dep_date']) and validate_date(params['return_date']))
-            
+    if validate_date(params['dep_date']):
+        dep_date = validate_date(params['dep_date'])
+        if today <=dep_date<=one_year:
+            if not params['return_date']:
+                params['oneway']='on'
+                print("\nThe search will be executed in oneway direction\n")
+                return True
+            else:
+                if validate_date(params['return_date']):
+                  return_date = validate_date(params['return_date'])
+                  if dep_date<=return_date<=one_year:
+                      return True
+                  else:
+                      print("Return date wasn't validated: must be between {} and {}. Please, try again!". format(str(dep_date), str(one_year)))                
+        else:
+            print("Depature date wasn't validated: must be between {} and {}. Please, try again!". format(str(toda), str(one_year)))
 
 
 def validate_iata(**kwargs):
@@ -95,13 +98,14 @@ def build_request(**kwargs):
 
 
 def build_tree_lxml(page):
+    
     try:
         tree = html.fromstring(page.json()['templates']['main'], "html.parser")
-        currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
-    except IndexError as e:
-        print(e)
-    # except TypeError as e:
-    #     print(e)    
+        currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]   
+    except IndexError:
+        print("No connections found for the entered data.\nYou can find further information on the travel periods in the airberlin flight plan [https://www.flyniki.com/en/flightplan]")
+    except KeyError:
+        print("Sorry, probably entered iata code isn't available or doesn't exist. Please, try again!")
     else:        
         return tree, currency
     
@@ -160,17 +164,15 @@ if __name__ == '__main__':
               }
 
     if validate_iata() and validate_dates():
-    
         page = build_request()
-        try:
-            tree, currency = build_tree_lxml(page)
-        except TypeError as e:
-            print(e)     
 
-        if params['oneway']:
-            oneway_flight(tree, currency)
-        else:
-            twoways_flight(tree, currency)
+        if build_tree_lxml(page):
+            tree, currency = build_tree_lxml(page)
+             
+            if params['oneway']:
+                oneway_flight(tree, currency)
+            else:
+                twoways_flight(tree, currency)
 
 # if __name__ == '__main__':
 #     main()           
