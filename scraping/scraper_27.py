@@ -91,7 +91,7 @@ def search_for_flights(tree):
     
     if params['oneway']:
         for flight in enumerate(outbound_flights[:10], 1):
-            print *flight, currency
+            print flight, currency
     else:
         return_tree = tree.xpath('//div[@class="return block"]//div[@class="lowest"]')
         return_flights = [i.xpath('./span/@title')[0] for i in return_tree]
@@ -109,7 +109,7 @@ def search_for_flights(tree):
     
         print "  FLIGHT     START/END     DURATION      CLASS         PRICE   "*2
         for flight in enumerate(sorted(result, key=itemgetter(-1)), 1):
-            print(*flight, currency)
+            print flight, currency
     
 
 # the program's execution
