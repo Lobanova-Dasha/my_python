@@ -2,65 +2,60 @@
 # flight_scraper.py
 """nnnnnnnnnnnnnnnnnnnnnnnnnn"""
 
+import requests
 from datetime import date, datetime, timedelta
 from itertools import product
 from operator import itemgetter
 from lxml import html
-import requests
 
 
 def check_date_format(input_date):
     """checks format of input_date"""
     try:
-        datetime.strptime(input_date, '%Y-%m-%d') 
-        return date(*map(int, input_date.split('-')))          
+        dep = datetime.strptime(input_date, '%Y-%m-%d')
+        return dep.date()         
     except ValueError as err:
         print("Incorrect data format of the entered date: {}. Please, try again!".format(err))
 
 
-def validate_dates(**kwargs):
+def check_interval(input_date, min_date=date.today()):
     """nnnn"""
-    today = date.today()
-    one_year = today + timedelta(days=360) 
-    if check_date_format(params['dep_date']):
-        dep_date = check_date_format(params['dep_date'])
-        if today <= dep_date <= one_year:
-            if not params['return_date']:
-                params['oneway'] = 'on'
-                print("\nThe search will be executed in oneway direction\n")
-                return True
-            else:
-                if check_date_format(params['return_date']):
-                  return_date = check_date_format(params['return_date'])
-                  if dep_date <= return_date <= one_year:
-                      return True
-                  else:
-                      print("Return date must be between {} and {}. Please, try again!". format(str(dep_date), str(one_year)))                
+    one_year = date.today()+timedelta(days=360) 
+    my_date = check_date_format(input_date)
+    
+    if my_date is not None:
+        if min_date <= my_date <= one_year:    
+            return True       
         else:
-            print("Depature date must be between {} and {}. Please, try again!". format(str(today), str(one_year)))
+            print("Invalid date {}. Must be between {} and {}. Please, try again!". format(input_date, str(min_date), str(one_year)))
+
+def validate_dates(params):
+    if check_interval(params['dep_date']):
+        if not params['return_date']:
+            params['oneway'] = 'on'
+            print("\nThe search will be executed in oneway direction\n")
+            return True
+        elif check_interval(params['return_date'], min_date=check_date_format(params['dep_date'])):
+            return True 
 
 
 def validate_iata(dep_iata, dest_iata):
     """nnnn"""
-    if dep_iata.isalpha() and dest_iata.isalpha():
-        if len(dep_iata) == 3 and len(dest_iata) == 3:
-            if dep_iata != dest_iata: 
-                return True
-            else:
-                print('Departure IATA and destination IATA can not be the same')    
+    for iata in (dep_iata, dest_iata):
+        if iata.isalpha() and len(iata) == 3:
+            return True 
         else:
-            print('Sorry, IATA code must contain definitely 3 letters.Please, try again!')          
-    else:
-        print('Sorry, IATA code must contain only letters. Please, try again!')
-       
+            print("Invalid IATA")    
 
-def build_request(**kwargs):
+
+def build_request(params):
     """nnnn"""
     session = requests.Session()
-    get_req = session.get(url='http://www.flyniki.com/en/booking/flight/vacancy.php?')
+    get_req = session.get(url='http://www.flyniki.com/en/booking/flight/vacancy.php')
                        
-    return session.post(get_req.url, 
-                        data={'_ajax[requestParams][adultCount]': '1',
+    page = session.post(get_req.url, 
+                        data={
+                              '_ajax[requestParams][adultCount]': '1',
                               '_ajax[requestParams][childCount]': '0',
                               '_ajax[requestParams][departure]': params['dep_iata'],
                               '_ajax[requestParams][destination]': params['dest_iata'],
@@ -71,82 +66,68 @@ def build_request(**kwargs):
                               '_ajax[requestParams][returnDate]': params['return_date'],
                               '_ajax[requestParams][returnDeparture]': '', 
                               '_ajax[requestParams][returnDestination]': '',   
-                              '_ajax[templates][]': 'main'}) 
+                              '_ajax[templates][]': 'main'
+                              })
+    
+    page.raise_for_status()
+    return page                            
                                    
     
 def build_tree_lxml(page):
     """nnnn"""
     try:
-        tree = html.fromstring(page.json()['templates']['main'], "html.parser")
-        currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]   
+        tree = html.fromstring(page.json()['templates']['main'], "html.parser")  
     except IndexError:
         print("No connections found for the entered data. Please, try again!")
     except KeyError:
         print("Sorry, probably entered iata code isn't available or doesn't exist. Please, try again!")
     else:        
-        return tree, currency
+        return tree
     
 
-def search_oneway_flights(tree):
+def search_for_flights(tree):
     """nnnn"""
     outbound_tree = tree.xpath('//div[@class="outbound block"]//div[@class="lowest"]')
-    outbound_flights = [title.xpath('./span/@title')[0] for title in outbound_tree]  
+    outbound_flights = [i.xpath('./span/@title')[0] for i in outbound_tree]
+    currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]   
     
     if params['oneway']:
         for flight in enumerate(outbound_flights[:10], 1):
             print(*flight, currency)
     else:
-        pass        
-    return outbound_flights
-           
+        return_tree = tree.xpath('//div[@class="return block"]//div[@class="lowest"]')
+        return_flights = [i.xpath('./span/@title')[0] for i in return_tree]
+        combinations = [*product(outbound_flights, return_flights)]
         
-def search_return_flights(tree):
-    """nnnn"""
-    outbound_flights = search_oneway_flights(tree_of_flights)
-    return_tree = tree.xpath('//div[@class="return block"]//div[@class="lowest"]')
-    return_flights = [title.xpath('./span/@title')[0] for title in return_tree]
-    combinations = [*product(outbound_flights, return_flights)]
-    table_head = "  FLIGHT    START/END    DURATION      CLASS         PRICE"
+        print('The total count of outbound flights: {}'.format(len(outbound_flights)))
+        print('The total count of return flights: {}'.format(len(return_flights)))
+        print('The total count of flights combinations: {}\n'.format(len(combinations)))
 
-    print('The total count of outbound flights: {}'.format(len(outbound_flights)))
-    print('The total count of return flights: {}'.format(len(return_flights)))
-    print('The total count of flights combinations: {}\n'.format(len(combinations)))
-
-    result = []
-    for i in combinations[:10]:
-        out_price = float(i[0].split()[-1])
-        return_price = float(i[-1].split()[-1])
-        total = round((out_price+return_price), 2)
-        element = '{}, {}, {}, {} Total price: {}'.format(i[0], currency, i[1], currency, total)
-        result.append(element)
+        result = []
+        for row in combinations[:10]:
+            total_price = [float(j.split()[-1]) for j in row]
+            element = '{}, {}, {}, {} Total price: {}'.format(i[0], currency, i[1], currency, sum(total_price))
+            result.append(element)
     
-    print(table_head*2)
-    for flight in enumerate(sorted(result, key=itemgetter(-1)), 1):
-        print(*flight, currency)
-
+        print("  FLIGHT     START/END     DURATION      CLASS         PRICE   " * 2)
+        for flight in enumerate(sorted(result, key=itemgetter(-1)), 1):
+            print(*flight, currency)
+    
 
 # the program's execution
 if __name__ == '__main__':
 
-    params = {"dep_iata": input("Enter the IATA code of the departure:").upper(),
+    params = {
+              "dep_iata": input("Enter the IATA code of the departure:").upper(),
               "dest_iata": input("Enter the IATA code of the destination:").upper(),
               "oneway": "",
               "dep_date": input("Enter the departure date YYYY-MM-DD:"),
-              "return_date": input("Enter the return date YYYY-MM-DD [optional parameter]:")}
+              "return_date": input("Enter the return date YYYY-MM-DD [optional parameter]:")
+              }
               
-
-    if validate_iata(params["dep_iata"], params["dest_iata"]) and validate_dates():
-        page = build_request()
-        page.raise_for_status()
-        
-        if build_tree_lxml(page):
-            tree_of_flights, currency = build_tree_lxml(page)
-             
-            if params['oneway']:
-                search_oneway_flights(tree_of_flights)
-            else:
-                search_return_flights(tree_of_flights)
-
-
-
-  
+    if validate_iata(params["dep_iata"], params["dest_iata"]) and validate_dates(params):
+        page_fly = build_request(params)
+        tree_of_flights= build_tree_lxml(page_fly)
+        search_for_flights(tree_of_flights)
+         
+                
