@@ -71,9 +71,6 @@ def build_request(**kwargs):
                               '_ajax[requestParams][returnDate]': params['return_date'],
                               '_ajax[requestParams][returnDeparture]': '', 
                               '_ajax[requestParams][returnDestination]': '',   
-                              '_ajax[templates][]': 'flightinfo',
-                              '_ajax[templates][]': 'infos',
-                              '_ajax[templates][]': 'priceoverview',
                               '_ajax[templates][]': 'main'}) 
                                    
     
@@ -109,7 +106,7 @@ def search_return_flights(tree):
     return_tree = tree.xpath('//div[@class="return block"]//div[@class="lowest"]')
     return_flights = [title.xpath('./span/@title')[0] for title in return_tree]
     combinations = [*product(outbound_flights, return_flights)]
-    table_head = "  FLIGHT    START/END    DURATION      CLASS         PRICE      "
+    table_head = "  FLIGHT    START/END    DURATION      CLASS         PRICE"
 
     print('The total count of outbound flights: {}'.format(len(outbound_flights)))
     print('The total count of return flights: {}'.format(len(return_flights)))

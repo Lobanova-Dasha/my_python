@@ -1,0 +1,4 @@
+Enter the IATA code of the departure:Enter the IATA code of the destination:Enter the departure date YYYY-MM-DD:Enter the return date YYYY-MM-DD [optional parameter]:
+The search will be executed in oneway direction
+
+1 TXL-MUC, 07:20-10:45, 03 h 25 min , Economy Light: 80.20 
