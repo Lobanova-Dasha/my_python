@@ -38,13 +38,13 @@ def validate_dates(params):
             return True 
 
 
-def validate_iata(dep_iata, dest_iata):
+def validate_iata(params):
     """nnnn"""
-    for iata in (dep_iata, dest_iata):
-        if iata.isalpha() and len(iata) == 3:
-            return True 
-        else:
-            print "Invalid IATA"    
+    for iata in (params["dep_iata"], params["dest_iata"]):
+        if not iata.isalpha() or len(iata) != 3:
+            print "Invalid IATA {}. Try again!".format(iata)
+            sys.exit()
+    return True
 
 
 def build_request(params):
@@ -75,20 +75,24 @@ def build_tree_lxml(page):
     """nnnn"""
     try:
         tree = html.fromstring(page.json()['templates']['main'], "html.parser")  
-    except IndexError:
-        print "No connections found for the entered data. Please, try again!"
     except KeyError:
         print "Sorry, probably entered iata code isn't available or doesn't exist. Please, try again!"
     else:        
         return tree
-    
 
 def search_for_flights(tree):
     """nnnn"""
-    outbound_tree = tree.xpath('//div[@class="outbound block"]//div[@class="lowest"]')
-    outbound_flights = [i.xpath('./span/@title')[0] for i in outbound_tree]
-    currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]   
-    
+    try:
+        currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
+    except (IndexError, AttributeError):
+        print "No connections found for the entered data. Please, try again!"    
+
+    if tree is not None:
+        outbound_tree = tree.xpath('//div[@class="outbound block"]//div[@class="lowest"]')
+        outbound_flights = [i.xpath('./span/@title')[0] for i in outbound_tree]
+    else:
+        sys.exit()    
+       
     if params['oneway']:
         for flight in enumerate(outbound_flights[:10], 1):
             print flight, currency
@@ -97,7 +101,7 @@ def search_for_flights(tree):
         return_flights = [i.xpath('./span/@title')[0] for i in return_tree]
         combinations = product(outbound_flights, return_flights)
         
-        print 'The total count of outbound flights: {}'.format(len(outbound_flights))
+        print '\nThe total count of outbound flights: {}'.format(len(outbound_flights))
         print 'The total count of return flights: {}'.format(len(return_flights))
         print 'The total count of flights combinations: {}\n'.format(len(combinations))
 
@@ -107,7 +111,7 @@ def search_for_flights(tree):
             element = '{}, {}, {}, {} Total price: {}'.format(row[0], currency, row[1], currency, sum(total_price))
             result.append(element)
     
-        print "  FLIGHT     START/END     DURATION      CLASS         PRICE   "*2
+        #print("  FLIGHT    START/END     DURATION     CLASS         PRICE     " * 2)
         for flight in enumerate(sorted(result, key=itemgetter(-1)), 1):
             print flight, currency
     
@@ -115,7 +119,7 @@ def search_for_flights(tree):
 # the program's execution
 if __name__ == '__main__':
 
-    params = {
+     params = {
               "dep_iata": raw_input("Enter the IATA code of the departure:").upper(),
               "dest_iata": raw_input("Enter the IATA code of the destination:").upper(),
               "oneway": "",
@@ -123,7 +127,12 @@ if __name__ == '__main__':
               "return_date": raw_input("Enter the return date YYYY-MM-DD [optional parameter]:")
               }
               
-    if validate_iata(params["dep_iata"], params["dest_iata"]) and validate_dates(params):
+    if validate_iata(params) and validate_dates(params):
         page_fly = build_request(params)
-        tree_of_flights= build_tree_lxml(page_fly)
-        search_for_flights(tree_of_flights)
+        
+        try:
+            tree_of_flights = build_tree_lxml(page_fly)
+        except Exception:
+            print "Sorry, no connections found for the entered data. Please, try again!"
+        else:
+            search_for_flights(tree_of_flights)

@@ -1,4 +1,127 @@
-Enter the IATA code of the departure:Enter the IATA code of the destination:Enter the departure date YYYY-MM-DD:Enter the return date YYYY-MM-DD [optional parameter]:
+﻿
+test1
+Enter the IATA code of the departure:ber
+Enter the IATA code of the destination:cdg
+Enter the departure date YYYY-MM-DD:2017-10-19
+Enter the return date YYYY-MM-DD [optional parameter]:2017-10-19
+
+The total count of outbound flights: 4
+The total count of return flights: 4
+The total count of flights combinations: 16
+
+  FLIGHT    START/END     DURATION     CLASS         PRICE       FLIGHT    START/END     DURATION     CLASS         PRICE
+1 TXL-CDG, 08:35-10:20, 01 h 45 min , Economy Light: 84.30,  £ , CDG-TXL, 19:05-20:45, 01 h 40 min , Economy Light: 85.20,  £  Total price: 169.5  £
+2 TXL-CDG, 08:35-10:20, 01 h 45 min , Economy Light: 84.30,  £ , CDG-TXL, 19:05-20:45, 01 h 40 min , Economy Classic: 103.20,  £  Total price: 187.5  £
+3 TXL-CDG, 08:35-10:20, 01 h 45 min , Economy Light: 84.30,  £ , CDG-TXL, 19:05-20:45, 01 h 40 min , Economy Flex: 138.20,  £  Total price: 222.5  £
+4 TXL-CDG, 08:35-10:20, 01 h 45 min , Economy Light: 84.30,  £ , CDG-TXL, 19:05-20:45, 01 h 40 min , Business Flex: 264.20,  £  Total price: 348.5  £
+5 TXL-CDG, 08:35-10:20, 01 h 45 min , Economy Classic: 102.30,  £ , CDG-TXL, 19:05-20:45, 01 h 40 min , Economy Light: 85.20,  £  Total price: 187.5  £
+6 TXL-CDG, 08:35-10:20, 01 h 45 min , Economy Classic: 102.30,  £ , CDG-TXL, 19:05-20:45, 01 h 40 min , Economy Classic: 103.20,  £  Total price: 205.5  £
+7 TXL-CDG, 08:35-10:20, 01 h 45 min , Economy Classic: 102.30,  £ , CDG-TXL, 19:05-20:45, 01 h 40 min , Economy Flex: 138.20,  £  Total price: 240.5  £
+8 TXL-CDG, 08:35-10:20, 01 h 45 min , Economy Classic: 102.30,  £ , CDG-TXL, 19:05-20:45, 01 h 40 min , Business Flex: 264.20,  £  Total price: 366.5  £
+9 TXL-CDG, 08:35-10:20, 01 h 45 min , Economy Flex: 138.30,  £ , CDG-TXL, 19:05-20:45, 01 h 40 min , Economy Light: 85.20,  £  Total price: 223.5  £
+10 TXL-CDG, 08:35-10:20, 01 h 45 min , Economy Flex: 138.30,  £ , CDG-TXL, 19:05-20:45, 01 h 40 min , Economy Classic: 103.20,  £  Total price: 241.5  £
+
+test2
+Enter the IATA code of the departure:txl
+Enter the IATA code of the destination:MUC
+Enter the departure date YYYY-MM-DD:2017-10-27
+Enter the return date YYYY-MM-DD [optional parameter]:
+
 The search will be executed in oneway direction
 
-1 TXL-MUC, 07:20-10:45, 03 h 25 min , Economy Light: 80.20 
+1 TXL-MUC, 07:20-10:45, 03 h 25 min , Economy Light: 80.20  £
+2 TXL-MUC, 07:20-10:45, 03 h 25 min , Economy Classic: 116.20  £
+3 TXL-MUC, 07:20-10:45, 03 h 25 min , Economy Flex: 196.20  £
+4 TXL-MUC, 07:20-10:45, 03 h 25 min , Business Flex: 613.30  £
+5 TXL-MUC, 07:30-08:40, 01 h 10 min , Economy Light: 59.80  £
+6 TXL-MUC, 07:30-08:40, 01 h 10 min , Economy Classic: 77.80  £
+7 TXL-MUC, 07:30-08:40, 01 h 10 min , Economy Flex: 117.80  £
+8 TXL-MUC, 07:30-08:40, 01 h 10 min , Business Flex: 277.30  £
+9 TXL-MUC, 08:20-09:30, 01 h 10 min , Economy Light: 59.80  £
+10 TXL-MUC, 08:20-09:30, 01 h 10 min , Economy Classic: 77.80  £
+
+test3
+Enter the IATA code of the departure:jj8
+Enter the IATA code of the destination:muc
+Enter the departure date YYYY-MM-DD:2017-10-27
+Enter the return date YYYY-MM-DD [optional parameter]:
+Invalid IATA JJ8. Try again!
+
+test4
+Enter the IATA code of the departure:ccc
+Enter the IATA code of the destination:cj8
+Enter the departure date YYYY-MM-DD:2017-10-27
+Enter the return date YYYY-MM-DD [optional parameter]:
+Invalid IATA CJ8. Try again!
+
+test5
+Enter the IATA code of the departure:ccc
+Enter the IATA code of the destination:bbb
+Enter the departure date YYYY-MM-DD:2017-10-27
+Enter the return date YYYY-MM-DD [optional parameter]:
+
+The search will be executed in oneway direction
+
+Sorry, probably entered iata code isn't available or doesn't exist. Please, try again!
+
+test6
+Enter the IATA code of the departure:txl
+Enter the IATA code of the destination:cdg
+Enter the departure date YYYY-MM-DD:2018-07-11
+Enter the return date YYYY-MM-DD [optional parameter]:
+
+The search will be executed in oneway direction
+
+No connections found for the entered data. Please, try again!
+
+test7
+Enter the IATA code of the departure:txl
+Enter the IATA code of the destination:cdg
+Enter the departure date YYYY-MM-DD:2018-07-11
+Enter the return date YYYY-MM-DD [optional parameter]:2018-07-11
+No connections found for the entered data. Please, try again!
+
+The total count of outbound flights: 0
+The total count of return flights: 0
+The total count of flights combinations: 0
+
+
+test8
+Enter the IATA code of the departure:txl
+Enter the IATA code of the destination:cdg
+Enter the departure date YYYY-MM-DD:2018-07-1
+Enter the return date YYYY-MM-DD [optional parameter]:
+
+The search will be executed in oneway direction
+
+Sorry, probably entered iata code isn't available or doesn't exist. Please, try again!
+No connections found for the entered data. Please, try again!
+
+
+test9
+Enter the IATA code of the departure:txl
+Enter the IATA code of the destination:cdg
+Enter the departure date YYYY-MM-DD:2018-07-
+Enter the return date YYYY-MM-DD [optional parameter]:
+Incorrect data format of the entered date: time data '2018-07-' does not match format '%Y-%m-%d'. Please, try again!
+
+test10
+Enter the IATA code of the departure:txl
+Enter the IATA code of the destination:cdg
+Enter the departure date YYYY-MM-DD:2017-10-19
+Enter the return date YYYY-MM-DD [optional parameter]:2017-10-
+Incorrect data format of the entered date: time data '2017-10-' does not match format '%Y-%m-%d'. Please, try again!
+
+test11
+Enter the IATA code of the departure:cdg
+Enter the IATA code of the destination:txl
+Enter the departure date YYYY-MM-DD:2017-10-22
+Enter the return date YYYY-MM-DD [optional parameter]:2017-10-19
+Invalid date 2017-10-19. Must be between 2017-10-22 and 2018-10-13. Please, try again!
+
+test12
+Enter the IATA code of the departure:cdg
+Enter the IATA code of the destination:mmm
+Enter the departure date YYYY-MM-DD:2017-10-11
+Enter the return date YYYY-MM-DD [optional parameter]:
+Invalid date 2017-10-11. Must be between 2017-10-18 and 2018-10-13. Please, try again!
