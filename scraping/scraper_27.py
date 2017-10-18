@@ -36,7 +36,6 @@ def validate_dates(params):
     """
     Returns True if both check_date_format(date) and check_interval(date) are True. 
     If return_date is empty, request will be built in oneway searching.
-
     """
     if check_interval(params['dep_date']):
         if not params['return_date']:
