@@ -34,8 +34,8 @@ def check_interval(input_date, min_date=date.today()):
 
 def validate_dates(params):
     """
-    Returns True if both check check_date_format(date) and check_interval(date) are True. 
-    If return_date is empty, request will be build in oneway searching.
+    Returns True if both check_date_format(date) and check_interval(date) are True. 
+    If return_date is empty, request will be built in oneway searching.
 
     """
     if check_interval(params['dep_date']):
@@ -92,7 +92,7 @@ def build_tree_lxml(page):
 def search_for_flights(tree):
     """
     Outputs information about oneway flights (start/end, duration, class, price, currency). 
-    In the case return flight, outputs all possible combinations with total price
+    In the case of return flight, outputs all possible combinations with the total price
     """
     try:
         currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
