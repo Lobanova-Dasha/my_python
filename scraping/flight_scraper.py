@@ -11,6 +11,7 @@ from lxml import html
 
 def check_date_format(input_date):
     """checks format of input_date"""
+
     try:
         dep = datetime.strptime(input_date, '%Y-%m-%d')
         return dep.date()         
@@ -20,14 +21,22 @@ def check_date_format(input_date):
 
 def check_interval(input_date, min_date=date.today()):
     """nnnn"""
-    one_year = date.today()+timedelta(days=360) 
-    my_date = check_date_format(input_date)
+    while True:
+        one_year = date.today()+timedelta(days=360) 
+        my_date = check_date_format(input_date)
     
-    if my_date is not None:
-        if min_date <= my_date <= one_year:    
-            return True       
-        else:
-            print("Invalid date {}. Must be between {} and {}. Please, try again!". format(input_date, str(min_date), str(one_year)))
+        if my_date is not None:
+            if min_date <= my_date <= one_year:    
+                return True       
+            else:
+                print("Invalid date {}. Must be between {} and {}. Please, try again!". format(input_date, str(min_date), str(one_year)))
+                if input('\nDo you want re-enter this parameters? y/n ') not in ['Y', 'y']:
+                    sys.exit('\nEnd of session')
+                else:
+                    params["dep_date"] = input('Enter new IATA code of the departure:')
+                    params["return_date"] = input('Enter new IATA code of the destination:') 
+                continue
+        return True                    
 
 def validate_dates(params):
     if check_interval(params['dep_date']):
@@ -41,11 +50,17 @@ def validate_dates(params):
 
 def validate_iata(params):
     """nnnn"""
-    for iata in (params["dep_iata"], params["dest_iata"]):
-        if not iata.isalpha() or len(iata) != 3:
-            print("Invalid IATA {}. Try again!".format(iata))
-            sys.exit()
-    return True
+    while True:
+        for iata in (params["dep_iata"], params["dest_iata"]):
+            if not iata.isalpha() or len(iata) != 3:
+                print("Invalid IATA {}. Try again!".format(iata))
+                if input('\nDo you want re-enter this parameters? y/n ') not in ['Y', 'y']:
+                    sys.exit('\nEnd of session')
+                else:
+                    params["dep_iata"] = input('Enter new departure date YYYY-MM-DD:')
+                    params["dest_iata"] = input('Enter new return date YYYY-MM-DD:') 
+                continue
+        return True
   
 
 def build_request(params):
