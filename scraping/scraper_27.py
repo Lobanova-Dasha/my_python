@@ -61,19 +61,20 @@ def build_request(params):
         get_req.raise_for_status()            
         page = session.post(get_req.url, 
                             data={
-                              '_ajax[requestParams][adultCount]': '1',
-                              '_ajax[requestParams][childCount]': '0',
-                              '_ajax[requestParams][departure]': params['dep_iata'],
-                              '_ajax[requestParams][destination]': params['dest_iata'],
-                              '_ajax[requestParams][infantCount]':  '0',
-                              '_ajax[requestParams][oneway]': params['oneway'],
-                              '_ajax[requestParams][openDateOverview]': '',    
-                              '_ajax[requestParams][outboundDate]': params['dep_date'],
-                              '_ajax[requestParams][returnDate]': params['return_date'],
-                              '_ajax[requestParams][returnDeparture]': '', 
-                              '_ajax[requestParams][returnDestination]': '',   
-                              '_ajax[templates][]': 'main'
+                                '_ajax[requestParams][adultCount]': '1',
+                                '_ajax[requestParams][childCount]': '0',
+                                '_ajax[requestParams][departure]': params['dep_iata'],
+                                '_ajax[requestParams][destination]': params['dest_iata'],
+                                '_ajax[requestParams][infantCount]':  '0',
+                                '_ajax[requestParams][oneway]': params['oneway'],
+                                '_ajax[requestParams][openDateOverview]': '',    
+                                '_ajax[requestParams][outboundDate]': params['dep_date'],
+                                '_ajax[requestParams][returnDate]': params['return_date'],
+                                '_ajax[requestParams][returnDeparture]': '', 
+                                '_ajax[requestParams][returnDestination]': '',   
+                                '_ajax[templates][]': 'main'
                             })
+        
         page.raise_for_status() 
         return page                            
                                    
