@@ -6,7 +6,7 @@ import requests
 from datetime import date, datetime, timedelta
 from itertools import product
 from operator import itemgetter
-from lxml import html, etree
+from lxml import html
 
 
 class CustomError(Exception):
@@ -91,7 +91,7 @@ def search_for_flights(tree):
         outbound_tree = tree.xpath('//div[@class="outbound block"]//div[@class="lowest"]')
         outbound_flights = [i.xpath('./span/@title')[0] for i in outbound_tree]
     except (IndexError, AttributeError) as err:
-        raise CustomError("No connections found for the entered data. Please, try again!", err)       
+        raise CustomError("Sorry, no connections found for the entered data. Please, try again!", err)       
   
     if params['oneway']:
         for flight in enumerate(outbound_flights[:10], 1):
@@ -134,6 +134,6 @@ if __name__ == '__main__':
         try:
             tree_of_flights = html.fromstring(page_fly.json()['templates']['main'], "html.parser")            
         except Exception as err:
-            raise CustomError("Sorry, no connections found for the entered data. Please, try again!", err)
+            raise CustomError("Sorry, probably entered iata code isn't available or doesn't exist.Please, try again!", err)
         else:
             search_for_flights(tree_of_flights)
