@@ -21,22 +21,17 @@ def check_date_format(input_date):
 
 def check_interval(input_date, min_date=date.today()):
     """nnnn"""
-    while True:
-        one_year = date.today()+timedelta(days=360) 
-        my_date = check_date_format(input_date)
+    one_year = date.today()+timedelta(days=360) 
+    my_date = check_date_format(input_date)
     
-        if my_date is not None:
-            if min_date <= my_date <= one_year:    
-                return True       
-            else:
-                print("Invalid date {}. Must be between {} and {}. Please, try again!". format(input_date, str(min_date), str(one_year)))
-                if input('\nDo you want re-enter this parameters? y/n ') not in ['Y', 'y']:
-                    sys.exit('\nEnd of session')
-                else:
-                    params["dep_date"] = input('Enter new IATA code of the departure:')
-                    params["return_date"] = input('Enter new IATA code of the destination:') 
-                continue
-        return True                    
+    if my_date is not None:
+        if min_date <= my_date <= one_year:    
+            return True       
+        else:
+            print("Invalid date {}. Must be between {} and {}. Please, try again!". format(input_date, str(min_date), str(one_year)))
+                 
+                     
+                                
 
 def validate_dates(params):
     if check_interval(params['dep_date']):
@@ -128,7 +123,7 @@ def search_for_flights(tree):
             element = '{}, {}, {}, {} Total price: {}'.format(row[0], currency, row[1], currency, sum(total_price))
             result.append(element)
     
-        #print("  FLIGHT    START/END     DURATION     CLASS         PRICE     " * 2)
+        print("  FLIGHT START/END     DURATION     CLASS         PRICE     " * 2)
         for flight in enumerate(sorted(result, key=itemgetter(-1)), 1):
             print(*flight, currency)
     
