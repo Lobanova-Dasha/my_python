@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
-
 # scraper_27.py
 #! python2.7
 
-import sys
 import requests
+import sys
 from datetime import date, datetime, timedelta
 from itertools import product
-from operator import itemgetter
 from lxml import html
+from operator import itemgetter
 
 
 class CustomError(Exception):
@@ -24,12 +23,12 @@ def check_interval(input_date, min_date=date.today()):
     max_date = date.today()+timedelta(days=360)
     if not min_date <= input_date <= max_date:
         try:
-            raise CustomError("{} must be between {} and {}".format(input_date, min_date, max_date))
+            raise CustomError('{} must be between {} and {}'.format(input_date, min_date, max_date))
         except CustomError as err:
             sys.stderr.write(err.message)
             sys.exit(1)
-    return True     
-   
+    return True
+
 
 def validate_dates(params):
     """
@@ -43,35 +42,35 @@ def validate_dates(params):
         if check_interval(dep_date):
             if not params['return_date']:
                 params['oneway'] = 'on'
-                print "\nThe search will be executed in oneway direction\n"
+                print '\nThe search will be executed in oneway direction\n'
                 return True
             else:
                 return_date = check_date_format(params['return_date'])
                 if check_interval(return_date, min_date=dep_date):
-                    return True            
+                    return True
     except ValueError as err:
         sys.stderr.write(err.message)
-        print "Please, try again!"
-        sys.exit(1)  
-       
+        print ' Please, try again!'
+        sys.exit(1)
+
 
 def validate_iata(params):
     """Vaidates IATA codes: must contain only 3 letters """
-    for iata in (params["dep_iata"], params["dest_iata"]):
+    for iata in (params['dep_iata'], params['dest_iata']):
         if not iata.isalpha() or len(iata) != 3:
             try:
-                raise CustomError("Invalid IATA {}. Try again!".format(iata))
+                raise CustomError('Invalid IATA {}. Try again!'.format(iata))
             except CustomError as err:
                 sys.stderr.write(err.message)
-                sys.exit(1)        
+                sys.exit(1)
     return True
 
 
 def build_request(params):
     with requests.Session() as session:
         get_req = session.get(url='http://www.flyniki.com/en/booking/flight/vacancy.php')
-        get_req.raise_for_status()          
-        page = session.post(get_req.url, 
+        get_req.raise_for_status()
+        page = session.post(get_req.url,
                             data={
                                 '_ajax[requestParams][adultCount]': '1',
                                 '_ajax[requestParams][childCount]': '0',
@@ -79,17 +78,17 @@ def build_request(params):
                                 '_ajax[requestParams][destination]': params['dest_iata'],
                                 '_ajax[requestParams][infantCount]': '0',
                                 '_ajax[requestParams][oneway]': params['oneway'],
-                                '_ajax[requestParams][openDateOverview]': '',    
+                                '_ajax[requestParams][openDateOverview]': '',
                                 '_ajax[requestParams][outboundDate]': params['dep_date'],
                                 '_ajax[requestParams][returnDate]': params['return_date'],
-                                '_ajax[requestParams][returnDeparture]': '', 
-                                '_ajax[requestParams][returnDestination]': '',   
+                                '_ajax[requestParams][returnDeparture]': '',
+                                '_ajax[requestParams][returnDestination]': '',
                                 '_ajax[templates][]': 'main'
                             })
 
         page.raise_for_status()
-        return page                         
-                                   
+        return page
+
 
 def search_for_flights(tree):
     """
@@ -98,29 +97,29 @@ def search_for_flights(tree):
     """
     try:
         currency = tree.xpath('//th[@id="flight-table-header-price-ECO_PREM"]/text()')[0]
-        currency = currency.encode("ascii").decode("utf-8", "replace")   
+        curr = currency.encode('utf8', 'replace')
         outbound_tree = tree.xpath('//div[@class="outbound block"]//div[@class="lowest"]')
         outbound_flights = [i.xpath('./span/@title')[0] for i in outbound_tree]
     except (IndexError, AttributeError) as err:
         print "Sorry, no connections found for the entered data. Please, try again!"
         sys.stderr.write(err.message)
         sys.exit(1)
-                 
-    table_head = "  FLIGHT    START/END     DURATION     CLASS         PRICE     "
-    
-    print table_head
+
+    table_head = '   FLIGHT   START/END     DURATION     CLASS          PRICE     '
+
     if params['oneway']:
+        print table_head
         for flight in enumerate(outbound_flights[:10], 1):
-            print flight[0], flight[-1], currency
+            print flight[0], flight[-1], curr
     else:
         return_tree = tree.xpath('//div[@class="return block"]//div[@class="lowest"]')
         return_flights = [i.xpath('./span/@title')[0] for i in return_tree]
         combinations = list(product(outbound_flights, return_flights))
-        
+
         result = []
         for row in combinations[:10]:
             total_price = [float(j.split()[-1]) for j in row]
-            element = '{}, {}, {}, {} Total price: {}'.format(row[0], currency, row[1], currency, sum(total_price))
+            element = '{}, {}, {}, {} Total price: {}'.format(row[0], curr, row[1], curr, sum(total_price))
             result.append(element)
 
         print '\nThe total count of outbound flights: {}'.format(len(list(outbound_flights)))
@@ -129,8 +128,8 @@ def search_for_flights(tree):
         
         print table_head*2
         for flight in enumerate(sorted(result, key=itemgetter(-1)), 1):
-            print flight[0], flight[-1], currency
-    
+            print flight[0], flight[-1], curr
+
 
 # the program's execution
 if __name__ == '__main__':
@@ -139,16 +138,15 @@ if __name__ == '__main__':
         "dep_iata": raw_input("Enter the IATA code of the departure:").upper(),
         "dest_iata": raw_input("Enter the IATA code of the destination:").upper(),
         "oneway": "",
-        "dep_date": raw_input("Enter the departure date YYYY-MM-DD:"), 
+        "dep_date": raw_input("Enter the departure date YYYY-MM-DD:"),
         "return_date": raw_input("Enter the return date YYYY-MM-DD [optional parameter]:")
     }
-      
 
     if validate_iata(params) and validate_dates(params):
         page_fly = build_request(params)
-        
+
         try:
-            tree_of_flights = html.fromstring(page_fly.json()['templates']['main'], "html.parser")                        
+            tree_of_flights = html.fromstring(page_fly.json()['templates']['main'], "html.parser")
         except Exception as err:
             print "\nSorry, probably entered iata code isn't available or doesn't exist."
             sys.stderr.write(err.message)
