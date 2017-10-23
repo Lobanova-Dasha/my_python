@@ -146,3 +146,4 @@ if __name__ == '__main__':
     except CustomError as err:
         sys.stderr.write(err.message)
         sys.exit(1)
+
