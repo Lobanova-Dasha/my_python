@@ -6,7 +6,7 @@ import requests
 import sys
 from datetime import date, datetime, timedelta
 from itertools import product
-from lxml import html
+from lxml import html, etree
 from operator import itemgetter
 
 
@@ -22,11 +22,7 @@ def check_interval(input_date, min_date=date.today()):
     """
     max_date = date.today()+timedelta(days=360)
     if not min_date <= input_date <= max_date:
-        try:
-            raise CustomError('{} must be between {} and {}'.format(input_date, min_date, max_date))
-        except CustomError as err:
-            sys.stderr.write(err.message)
-            sys.exit(1)
+        raise CustomError('{} must be between {} and {}'.format(input_date, min_date, max_date))   
     return True
 
 
@@ -49,20 +45,14 @@ def validate_dates(params):
                 if check_interval(return_date, min_date=dep_date):
                     return True
     except ValueError as err:
-        sys.stderr.write(err.message)
-        print ' Please, try again!'
-        sys.exit(1)
+        raise CustomError('Invalid date: {}. Please, try again!'.format(err))
 
 
 def validate_iata(params):
     """Vaidates IATA codes: must contain only 3 letters """
     for iata in (params['dep_iata'], params['dest_iata']):
         if not iata.isalpha() or len(iata) != 3:
-            try:
-                raise CustomError('Invalid IATA {}. Try again!'.format(iata))
-            except CustomError as err:
-                sys.stderr.write(err.message)
-                sys.exit(1)
+            raise CustomError('Invalid IATA {}. Try again!'.format(iata))  
     return True
 
 
@@ -101,9 +91,8 @@ def search_for_flights(tree):
         outbound_tree = tree.xpath('//div[@class="outbound block"]//div[@class="lowest"]')
         outbound_flights = [i.xpath('./span/@title')[0] for i in outbound_tree]
     except (IndexError, AttributeError) as err:
-        print "Sorry, no connections found for the entered data. Please, try again!"
-        sys.stderr.write(err.message)
-        sys.exit(1)
+         raise CustomError('Sorry, no connections found for the entered data. Please, try again!')
+
 
     table_head = '   FLIGHT   START/END     DURATION     CLASS          PRICE     '
 
@@ -125,7 +114,7 @@ def search_for_flights(tree):
         print '\nThe total count of outbound flights: {}'.format(len(list(outbound_flights)))
         print 'The total count of return flights: {}'.format(len(list(return_flights)))
         print 'The total count of flights combinations: {}\n'.format(len(list(combinations)))
-        
+
         print table_head*2
         for flight in enumerate(sorted(result, key=itemgetter(-1)), 1):
             print flight[0], flight[-1], curr
@@ -142,14 +131,18 @@ if __name__ == '__main__':
         "return_date": raw_input("Enter the return date YYYY-MM-DD [optional parameter]:")
     }
 
-    if validate_iata(params) and validate_dates(params):
-        page_fly = build_request(params)
+    try:
+        if validate_iata(params) and validate_dates(params):
+            page_fly = build_request(params)
 
-        try:
-            tree_of_flights = html.fromstring(page_fly.json()['templates']['main'], "html.parser")
-        except Exception as err:
-            print "\nSorry, probably entered iata code isn't available or doesn't exist."
-            sys.stderr.write(err.message)
-            sys.exit(1)
-        else:
-            search_for_flights(tree_of_flights)
+            try:
+                tree_of_flights = html.fromstring(page_fly.json()['templates']['main'], "html.parser")
+            except (KeyError, Exception) as err:
+            #except (KeyError, etree.ParseError, etree.LxmlSyntaxError) as err:
+                raise CustomError("\nSorry, probably entered iata code isn't available or doesn't exist.")
+            else:
+                search_for_flights(tree_of_flights)
+
+    except CustomError as err:
+        sys.stderr.write(err.message)
+        sys.exit(1)
