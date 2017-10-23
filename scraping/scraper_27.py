@@ -135,8 +135,7 @@ if __name__ == '__main__':
             page_fly = build_request(params)
             try:
                 tree_of_flights = html.fromstring(page_fly.json()['templates']['main'], "html.parser")
-            except (KeyError, Exception):
-            #except (KeyError, etree.ParseError, etree.LxmlSyntaxError) as err:
+            except (KeyError, etree.ParseError, etree.LxmlSyntaxError) as err:
                 raise CustomError("\nSorry, probably entered iata code isn't available or doesn't exist.")
             else:
                 search_for_flights(tree_of_flights)
