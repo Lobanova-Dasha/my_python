@@ -93,7 +93,6 @@ def search_for_flights(tree):
     except (IndexError, AttributeError):
          raise CustomError('Sorry, no connections found for the entered data. Please, try again!')
 
-
     table_head = '   FLIGHT   START/END     DURATION     CLASS          PRICE     '
 
     if params['oneway']:
