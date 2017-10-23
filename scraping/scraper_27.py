@@ -90,7 +90,7 @@ def search_for_flights(tree):
         curr = currency.encode('utf8', 'replace')
         outbound_tree = tree.xpath('//div[@class="outbound block"]//div[@class="lowest"]')
         outbound_flights = [i.xpath('./span/@title')[0] for i in outbound_tree]
-    except (IndexError, AttributeError) as err:
+    except (IndexError, AttributeError):
          raise CustomError('Sorry, no connections found for the entered data. Please, try again!')
 
 
