@@ -20,7 +20,7 @@ def check_interval(input_date, min_date=date.today()):
     Checks dates for the correct time interval:
     (min_date <= dep_date <= dest_date <= max_date)
     """
-    max_date = date.today()+timedelta(days=360)
+    max_date = date.today() + timedelta(days=360)
     if not min_date <= input_date <= max_date:
         raise CustomError('{} must be between {} and {}'.format(input_date, min_date, max_date))   
     return True
