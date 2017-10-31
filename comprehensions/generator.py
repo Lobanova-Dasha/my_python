@@ -2,15 +2,6 @@
 import time
 from functools import wraps
 
-
-
-# def timer(func, *args, ** kwargs):
-#     start = time.clock()
-#     for i in repslist:
-#         result = func(*args, **kwargs)
-#     elapsed = time.clock() - start
-#     return(elapsed, ret)    
-
 def my_timer(orig_func):
     @wraps(orig_func)
     def wrapper(*args, **kwargs):
@@ -19,25 +10,32 @@ def my_timer(orig_func):
         t2 = time.time() - t1
         print('{} ran in {} sec'.format(orig_func.__name__, t2))
         return result
+    return wrapper 
  
-repslist = range(1000)
+repslist = range(10000000)
 
 @my_timer 
 def for_loop():
     res = []
     for x in repslist:
-        res.append(abs(x))
+        res.append(x+10)
 
+@my_timer 
 def list_comp():
-    return [abs(x) for x in repslist]
+    return [x+10 for x in repslist]
 
+@my_timer
+def map_call():
+    return list(map((lambda x: x + 10), repslist))
 
-# print(sys.version)
+@my_timer
+def gen_expr():
+    return list(x+10 for  x in repslist)       
 
-# for test in (for_loop, list_comp):
-#     elapsed, result = timer.timer(test)
-#     print('-' * 33)
-#     print('{}: {} => [{}....{}]'.format(test.__name__, elapsed, result[0], result[-1]))        
+for_loop()
+list_comp()
+map_call()
+gen_expr()
 
 
 
