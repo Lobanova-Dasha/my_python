@@ -2,6 +2,7 @@
 # my_decorators.py
 # Thanks so much Corey Schafer for the great explanation
 # https://www.youtube.com/channel/UCCezIgC97PvUuR4_gbFUs5g
+import time
 
 
 # step 1
@@ -78,8 +79,7 @@ def my_logger(orig_func):
     
 
 def my_timer(orig_func):
-    import time
-
+    
     @wraps(orig_func)
     def wrapper(*args, **kwargs):
         t1 = time.time()
@@ -87,10 +87,7 @@ def my_timer(orig_func):
         t2 = time.time() - t1
         print('{} ran in {} sec'.format(orig_func.__name__, t2))
         return result
-
     return wrapper        
-
-import time
 
 @my_logger
 @my_timer
