@@ -337,3 +337,48 @@ elif ay == ey and am == em and ad > ed:
     print((ad-ed)*15)
 else: 
     print(0)
+
+
+# Compare the Triplets
+alice = list(map(int, input().split()))
+bob = list(map(int, input().split()))
+
+pairs = list(zip(alice, bob))
+
+arr1 = []
+arr2 = []
+
+def compair(pair):
+ 
+    if pair[0] > pair[-1]:
+        arr1.append(1)
+    elif pair[0] < pair[-1]:
+        arr2.append(1)
+    
+
+# Diagonal Difference
+Create a matrix
+arr = [list(map(int, input().split())) for x in range(int(input()))]
+# get sum of each diagonal  
+diag1 = sum([i[arr.index(i)] for i in arr])
+diag2 = sum([i[::-1][arr.index(i)] for i in arr])
+
+print(abs(diag1-diag2))
+
+
+# Given an array of integers, 
+# calculate which fraction of its elements are positive, 
+# which fraction of its elements are negative, and 
+# which fraction of its elements are zeroes, respectively. 
+# Print the decimal value of each fraction on a new line.
+size = int(input())
+numbers = list(map(int, input().split()))
+positive = len(list(filter(lambda x: x > 0, numbers)))
+negative = len(list(filter(lambda x: x < 0, numbers)))
+zeroes = len(list(filter(lambda x: x == 0, numbers)))
+
+for num in (positive, negative, zeroes):
+    print(round(num/size, 6))
+
+           
+    
