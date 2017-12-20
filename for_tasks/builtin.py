@@ -68,6 +68,7 @@ def update_dict(structure, other):
     
 
 if __name__ == "__main__":
+	
     my_list = create_data(10000000)
     my_tuple = tuple(my_list)
     my_dict = {key: val for key, val in enumerate(my_list)}
