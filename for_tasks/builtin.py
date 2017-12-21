@@ -127,8 +127,8 @@ if __name__ == "__main__":
 # print([[]], ["",[],( ),{},None])
 # L = [0,1,2,3]
 # L[3:1] = ['?']
-# print(L[3:1])
-# print(L)
+print(L[3:1])
+print(L)
 
 # S = list("spam")
 # print(id(S))
