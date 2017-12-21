@@ -12,7 +12,17 @@ def my_timer(orig_func):
         t2 = time.time() - t1
         print('{} ran in {} sec'.format(orig_func.__name__, t2))
         return result
-    return wrapper 
+    return wrapper
+
+
+def pause(t):
+    def wrapper(orig_func):
+        def tmp(*args, **kwargs):
+            time.sleep(t)
+            return orig_func(*args, **kwargs)
+        return tmp
+    return wrapper
+
 
 
 def create_data(n):
@@ -21,6 +31,7 @@ def create_data(n):
 
  
 @my_timer
+#@pause(4)
 def push_elem(structure, elem):
     structure.append(elem)
     return structure
@@ -93,3 +104,40 @@ if __name__ == "__main__":
     del_item(my_dict, 56)
     update_dict(my_dict, my_dict)
 
+
+# A = set('spam')
+# B = set('ham')
+# print(A, B)
+# print(A & B)
+# print(A | B)
+# print(A - B)
+# print(B - A)
+# print(len("a\nb\x1f\000d"))
+# print(dict.fromkeys(['a', 'b'], 0))
+# print({k:0 for k in 'ab'})
+# L = [1,2,3] + [4,5,6]
+# print(L, L[:], L[:0], L[-2], L[-2:])
+# print(([1,2,3] + [4,5,6])[2:4])
+# D = {'x':1, 'y':2, 'z':3}
+# D['w'] = 0
+# print(D['x'] + D['w'])
+# D[(1,2,3)] = 4
+# print(D)
+# print(list(D.keys()), list(D.values()), (1,2,3) in D)
+# print([[]], ["",[],( ),{},None])
+# L = [0,1,2,3]
+# L[3:1] = ['?']
+# print(L[3:1])
+# print(L)
+
+# S = list("spam")
+# print(id(S))
+
+# tmp = [x for x in range(10, 20)]
+# even = [x for x in tmp if tmp.index(x)%2 == 0]
+# iter_ = iter(even)
+# print next(iter_)
+# print next(iter_)
+# print next(iter_)
+# print next(iter_)
+# print next(iter_)
