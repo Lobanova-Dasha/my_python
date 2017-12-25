@@ -47,3 +47,14 @@ even_gen = (x**2 for x in xrange(20) if x**2 % 2 == 0)
 # print(next(even_gen))
 # print(next(even_gen))
 
+
+# Синтаксический сахар
+# list/dict/set comprehensions
+list_comp = [x for x in xrange(100)]
+dict_comp = {k:v for k, v in enumerate(xrange(50))}
+set_comp = {x for x in [1, 1, 1, 3, 3, 4, 4, 6, 7, 8]}
+
+# generator expressions
+gen_exp = (x for x in xrange(100))
+#print(type(gen_exp))
+
