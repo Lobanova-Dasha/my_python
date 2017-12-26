@@ -9,6 +9,7 @@
 
 
 class EvenIterator(object):
+    """Returns all elements which have an even index."""
 
     def __init__(self, sequence):
         self.index = 0
