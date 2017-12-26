@@ -1,6 +1,6 @@
 # coding: utf-8
 #! python 2.7
-# even_iterator.py
+# even_iter.py
 
 """
 Напишите итератор EvenIterator, который позволяет получить из списка
@@ -9,29 +9,27 @@
 
 
 class EvenIterator(object):
-    
-    def __init__(self, seq):
-        self.seq = seq
-		
+
+    def __init__(self, sequence):
+        self.index = 0
+        self.seq = sequence
+
     def __iter__(self):
-        return self	
+        return self
 
-    def __getitem__(self, index):
-        result = self.seq[index]
-        if index%2 == 0:
-            return result		
-        	
-  
-
-items = EvenIterator([5, 17, 23, -5])
-print(next(items))
-  
-		
+    def next(self):
+        if self.index < len(self.seq):
+            i = self.index
+            self.index += 2
+            return self.seq[i]
+        else:    
+            raise StopIteration()
+        
 
 # ---------------------------------------
 # Тесты для проверки правильности решения
 
-"""
+
 import unittest
 
 
@@ -54,4 +52,3 @@ class EvenIteratorTest(unittest.TestCase):
 
 
 unittest.main()
-"""
