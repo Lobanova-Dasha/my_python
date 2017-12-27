@@ -6,12 +6,11 @@ import unittest
 
 
 def odd_generator(n):
-	"""Returns all odd numbers (1-n)"""
+    """Returns all odd numbers (1-n)"""
 
-    temp = [x for x in range(1, n+1) if x%2 == 1]
-
-    for i in temp:
-        yield i
+    for x in xrange(1, n+1):
+        if x%2 == 1:
+            yield x        
 
 
 class OddGeneratorTest(unittest.TestCase):

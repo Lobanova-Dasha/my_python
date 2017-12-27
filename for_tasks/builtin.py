@@ -4,6 +4,7 @@
 import time
 from functools import wraps
 
+
 def my_timer(orig_func):
     @wraps(orig_func)
     def wrapper(*args, **kwargs):
@@ -15,6 +16,7 @@ def my_timer(orig_func):
     return wrapper
 
 
+# parameterized decorator
 def pause(t):
     def wrapper(orig_func):
         def tmp(*args, **kwargs):
@@ -77,9 +79,8 @@ def update_dict(structure, other):
     structure.update(other)
     return structure      
     
-
-if __name__ == "__main__":
-	
+def main():
+    
     my_list = create_data(10000000)
     my_tuple = tuple(my_list)
     my_dict = {key: val for key, val in enumerate(my_list)}
@@ -92,7 +93,7 @@ if __name__ == "__main__":
     get_elem(my_list)
     get_elem(my_list, 6786)
     get_elem(my_list, len(my_list)-1)
-    
+
     # Tuple
     get_elem(my_tuple)
     get_elem(my_tuple, 6786)
@@ -103,6 +104,12 @@ if __name__ == "__main__":
     pop_dict(my_dict)
     del_item(my_dict, 56)
     update_dict(my_dict, my_dict)
+
+
+if __name__ == "__main__":
+    main()
+
+
 
 
 # A = set('spam')

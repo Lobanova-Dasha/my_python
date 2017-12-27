@@ -11,7 +11,7 @@
 iter_object = [x*x for x in xrange(1, 10+1)]
 #print(dir(iter_object))
 
-# Iterator has methods __iter__and next
+# Iterator has methods __iter__ and next
 my_iter = iter(iter_object)
 # print(dir(my_iter))
 # print(next(my_iter))
@@ -22,11 +22,10 @@ my_iter = iter(iter_object)
 # сходства/различия с итераторами
 # уметь написать простейший генератор (что-то вроде нечётные числа от a до b)
 def my_gen(num):
-    seq = [x*x for x in xrange(num+1)]
 
-    for i in seq:
-        if i%2 == 1:
-            yield i
+    for x in xrange(num+1):
+        if x % 2 == 1:
+            yield x           
 
 odd = my_gen(10)
 #print(dir(my_gen))
